@@ -978,6 +978,7 @@ p {
     font-weight: 700;
     margin-bottom: 12px;
     position: relative;
+    color: #fff;
 }
 
 .page-header__subtitle {
