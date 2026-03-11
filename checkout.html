@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа - Питомник растений «Хвойный»</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header" id="header">
+        <div class="container header__container">
+            <a href="index.html" class="logo">
+                <span class="logo__icon">🌲</span>
+                <span class="logo__text">Хвойный</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav__link">Главная</a>
+                <a href="catalog.html" class="nav__link">Каталог</a>
+                <a href="contacts.html" class="nav__link">Контакты</a>
+                <a href="admin.html" class="nav__link">Админка</a>
+            </nav>
+            <a href="cart.html" class="cart-btn">
+                <span class="cart-btn__icon">🛒</span>
+                <span class="cart-btn__count" id="cart-count">0</span>
+            </a>
+            <button class="burger-btn" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="index.html" class="mobile-nav__link">Главная</a>
+            <a href="catalog.html" class="mobile-nav__link">Каталог</a>
+            <a href="cart.html" class="mobile-nav__link">Корзина</a>
+            <a href="contacts.html" class="mobile-nav__link">Контакты</a>
+            <a href="admin.html" class="mobile-nav__link">Админка</a>
+        </div>
+    </header>
+
+    <!-- Заголовок страницы -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-header__title">Оформление заказа</h1>
+            <p class="page-header__subtitle">Заполните форму для завершения покупки</p>
+        </div>
+    </section>
+
+    <!-- Форма оформления заказа -->
+    <section class="checkout">
+        <div class="container">
+            <div class="checkout-grid">
+                <!-- Форма -->
+                <div class="checkout-form">
+                    <form id="order-form" class="form">
+                        <div class="form-section">
+                            <h3 class="form-section__title">Контактные данные</h3>
+                            <div class="form-group">
+                                <label for="name" class="form-label">Имя <span class="form-required">*</span></label>
+                                <input type="text" id="name" name="name" class="form-input" required placeholder="Иван Иванов">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Телефон <span class="form-required">*</span></label>
+                                <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+7 (999) 000-00-00">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email <span class="form-required">*</span></label>
+                                <input type="email" id="email" name="email" class="form-input" required placeholder="example@mail.ru">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section__title">Адрес доставки</h3>
+                            <div class="form-group">
+                                <label for="address" class="form-label">Адрес <span class="form-required">*</span></label>
+                                <textarea id="address" name="address" class="form-input form-input--textarea" required placeholder="Город, улица, дом, квартира"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="comment" class="form-label">Комментарий к заказу</label>
+                                <textarea id="comment" name="comment" class="form-input form-input--textarea" placeholder="Пожелания по доставке, времени и т.д."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section__title">Способ оплаты</h3>
+                            <div class="payment-methods">
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="yoomoney" checked>
+                                    <div class="payment-option__card">
+                                        <div class="payment-option__icon">💳</div>
+                                        <div class="payment-option__info">
+                                            <span class="payment-option__name">ЮMoney</span>
+                                            <span class="payment-option__desc">Картой, СБП или кошельком</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="cash">
+                                    <div class="payment-option__card">
+                                        <div class="payment-option__icon">💵</div>
+                                        <div class="payment-option__info">
+                                            <span class="payment-option__name">При получении</span>
+                                            <span class="payment-option__desc">Наличные или карта курьеру</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- Форма ЮMoney (скрыта по умолчанию) -->
+                            <div id="yoomoney-form" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; display: none;">
+                                <p style="margin-bottom: 16px; color: #666;">После подтверждения заказа вы будете перенаправлены на оплату ЮMoney</p>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="padding: 4px 12px; background: #fff; border-radius: 4px; font-size: 0.85rem;">💳 Карта MIR</span>
+                                    <span style="padding: 4px 12px; background: #fff; border-radius: 4px; font-size: 0.85rem;">💳 Visa/MC</span>
+                                    <span style="padding: 4px 12px; background: #fff; border-radius: 4px; font-size: 0.85rem;">📱 СБП</span>
+                                    <span style="padding: 4px 12px; background: #fff; border-radius: 4px; font-size: 0.85rem;">💰 ЮMoney</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="agreement" required>
+                                <span class="checkbox-text">Я согласен(на) с <a href="#" class="link">условиями обработки персональных данных</a> <span class="form-required">*</span></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn--large btn--primary btn--block">Подтвердить заказ и оплатить</button>
+                    </form>
+                </div>
+
+                <!-- Сводка заказа -->
+                <div class="checkout-summary">
+                    <h3 class="checkout-summary__title">Ваш заказ</h3>
+                    <div class="checkout-items" id="checkout-items">
+                        <!-- Товары загружаются через JS -->
+                    </div>
+                    <div class="checkout-totals">
+                        <div class="checkout-totals__row">
+                            <span>Товары:</span>
+                            <span id="checkout-subtotal">0 ₽</span>
+                        </div>
+                        <div class="checkout-totals__row">
+                            <span>Доставка:</span>
+                            <span id="checkout-delivery">500 ₽</span>
+                        </div>
+                        <div class="checkout-totals__total">
+                            <span>Итого:</span>
+                            <span id="checkout-total">0 ₽</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container footer__container">
+            <div class="footer__col">
+                <a href="index.html" class="logo logo--light">
+                    <span class="logo__icon">🌲</span>
+                    <span class="logo__text">Хвойный</span>
+                </a>
+                <p class="footer__desc">Питомник растений с душой и заботой о каждом клиенте</p>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__title">Навигация</h4>
+                <a href="index.html" class="footer__link">Главная</a>
+                <a href="catalog.html" class="footer__link">Каталог</a>
+                <a href="contacts.html" class="footer__link">Контакты</a>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__title">Контакты</h4>
+                <a href="tel:+79219503595" class="footer__link footer__phone">+7 (921) 950-35-95</a>
+                <a href="mailto:greenmagics@mail.ru" class="footer__link">greenmagics@mail.ru</a>
+                <p class="footer__address">Ленинградская обл., Симагинские Высоты, Дубовый проезд 11</p>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container">
+                <p>&copy; 2026 Питомник растений «Хвойный». Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно успеха -->
+    <div class="modal" id="success-modal">
+        <div class="modal__overlay"></div>
+        <div class="modal__content">
+            <button class="modal__close" id="modal-close">&times;</button>
+            <div class="success-message">
+                <div class="success-message__icon">✅</div>
+                <h2 class="success-message__title">Заказ оформлен!</h2>
+                <p class="success-message__text">Спасибо за заказ! Наш менеджер свяжется с вами в ближайшее время для подтверждения деталей.</p>
+                <a href="index.html" class="btn btn--large btn--primary">На главную</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/checkout.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

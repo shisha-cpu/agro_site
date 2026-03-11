@@ -1,0 +1,1486 @@
+// ========================================
+// Питомник растений «Хвойный» - Основные стили
+// ========================================
+
+// Переменные
+$color-primary: #2d5a27;
+$color-primary-dark: #1e3c1a;
+$color-primary-light: #4a7c43;
+$color-secondary: #5a8f2d;
+$color-accent: #e67e22;
+$color-accent-hover: #d3540f;
+
+$color-text: #2c2c2c;
+$color-text-light: #666;
+$color-text-muted: #999;
+
+$color-bg: #fafafa;
+$color-bg-light: #ffffff;
+$color-bg-dark: #f5f5f5;
+
+$color-border: #e0e0e0;
+$color-border-light: #f0f0f0;
+
+$color-success: #27ae60;
+$color-error: #e74c3c;
+$color-warning: #f39c12;
+
+$font-main: 'Montserrat', sans-serif;
+$font-heading: 'Playfair Display', serif;
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+
+$border-radius: 8px;
+$border-radius-lg: 16px;
+$border-radius-xl: 24px;
+
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+$transition: all 0.3s ease;
+
+// ========================================
+// Сброс и базовые стили
+// ========================================
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-main;
+    font-size: 16px;
+    line-height: 1.6;
+    color: $color-text;
+    background-color: $color-bg;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: $transition;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+}
+
+// ========================================
+// Типографика
+// ========================================
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-heading;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: $spacing-md;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: $spacing-xxl;
+    color: $color-primary;
+    position: relative;
+    
+    &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, $color-primary, $color-secondary);
+        margin: $spacing-md auto 0;
+        border-radius: 2px;
+    }
+}
+
+// ========================================
+// Компоненты
+// ========================================
+
+// Кнопки
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-sm $spacing-lg;
+    font-family: $font-main;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: $border-radius;
+    transition: $transition;
+    text-align: center;
+    
+    &--primary {
+        background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+        color: white;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+        }
+    }
+    
+    &--large {
+        padding: $spacing-md $spacing-xxl;
+        font-size: 1.1rem;
+    }
+    
+    &--outline {
+        background: transparent;
+        border: 2px solid $color-primary;
+        color: $color-primary;
+        
+        &:hover {
+            background: $color-primary;
+            color: white;
+        }
+    }
+    
+    &--light {
+        background: white;
+        color: $color-primary;
+        
+        &:hover {
+            background: $color-bg-dark;
+        }
+    }
+    
+    &--block {
+        width: 100%;
+    }
+}
+
+// Логотип
+.logo {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-family: $font-heading;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $color-primary;
+    
+    &__icon {
+        font-size: 2rem;
+    }
+    
+    &--light {
+        color: white;
+    }
+}
+
+// ========================================
+// Шапка
+// ========================================
+
+.header {
+    background: $color-bg-light;
+    box-shadow: $shadow-sm;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
+    &__container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-md $spacing-md;
+        gap: $spacing-md;
+    }
+}
+
+.nav {
+    display: flex;
+    gap: $spacing-lg;
+    
+    @media (max-width: 768px) {
+        display: none;
+    }
+    
+    &__link {
+        font-weight: 500;
+        color: $color-text;
+        position: relative;
+        padding: $spacing-xs 0;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: $color-primary;
+            transition: $transition;
+        }
+        
+        &:hover,
+        &--active {
+            color: $color-primary;
+            
+            &::after {
+                width: 100%;
+            }
+        }
+    }
+}
+
+// Кнопка корзины
+.cart-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-sm $spacing-md;
+    background: $color-bg-dark;
+    border-radius: $border-radius;
+    position: relative;
+    transition: $transition;
+    
+    &:hover {
+        background: $color-primary;
+        
+        .cart-btn__icon {
+            transform: scale(1.1);
+        }
+    }
+    
+    &__icon {
+        font-size: 1.5rem;
+        transition: $transition;
+    }
+    
+    &__count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: $color-accent;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    &--active {
+        background: $color-primary;
+        
+        .cart-btn__icon,
+        .cart-btn__count {
+            color: white;
+        }
+    }
+}
+
+// Бургер меню
+.burger-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: $spacing-sm;
+    
+    span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: $color-text;
+        transition: $transition;
+    }
+    
+    @media (max-width: 768px) {
+        display: flex;
+    }
+}
+
+// Мобильное меню
+.mobile-nav {
+    display: none;
+    flex-direction: column;
+    background: $color-bg-light;
+    border-top: 1px solid $color-border;
+    padding: $spacing-md;
+    
+    &.active {
+        display: flex;
+    }
+    
+    @media (min-width: 769px) {
+        display: none !important;
+    }
+    
+    &__link {
+        padding: $spacing-md;
+        font-weight: 500;
+        border-bottom: 1px solid $color-border-light;
+        
+        &:last-child {
+            border-bottom: none;
+        }
+        
+        &--active {
+            color: $color-primary;
+        }
+    }
+}
+
+// ========================================
+// Hero секция
+// ========================================
+
+.hero {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+        background-size: 60px 60px;
+        opacity: 0.5;
+    }
+    
+    &__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+    }
+    
+    &__content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+    }
+    
+    &__title {
+        font-family: $font-heading;
+        font-size: 3.5rem;
+        margin-bottom: $spacing-md;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        
+        @media (max-width: 768px) {
+            font-size: 2rem;
+        }
+    }
+    
+    &__subtitle {
+        font-size: 1.5rem;
+        margin-bottom: $spacing-xl;
+        opacity: 0.9;
+        
+        @media (max-width: 768px) {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+// ========================================
+// Преимущества
+// ========================================
+
+.features {
+    padding: $spacing-xxl 0;
+    background: $color-bg-light;
+    
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: $spacing-lg;
+    }
+}
+
+.feature-card {
+    text-align: center;
+    padding: $spacing-xl;
+    background: $color-bg;
+    border-radius: $border-radius-lg;
+    transition: $transition;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-md;
+    }
+    
+    &__icon {
+        font-size: 3rem;
+        margin-bottom: $spacing-md;
+    }
+    
+    &__title {
+        font-size: 1.25rem;
+        color: $color-primary;
+        margin-bottom: $spacing-sm;
+    }
+    
+    &__text {
+        color: $color-text-light;
+        font-size: 0.95rem;
+    }
+}
+
+// ========================================
+// Сетка товаров
+// ========================================
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $spacing-lg;
+}
+
+.product-card {
+    background: $color-bg-light;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+    transition: $transition;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-lg;
+    }
+    
+    &__image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+    }
+    
+    &__content {
+        padding: $spacing-lg;
+    }
+    
+    &__category {
+        font-size: 0.8rem;
+        color: $color-secondary;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: $spacing-xs;
+    }
+    
+    &__title {
+        font-size: 1.25rem;
+        color: $color-text;
+        margin-bottom: $spacing-sm;
+    }
+    
+    &__price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $color-primary;
+        margin-bottom: $spacing-md;
+    }
+    
+    &__btn {
+        width: 100%;
+    }
+}
+
+// ========================================
+// Категории превью
+// ========================================
+
+.categories-preview {
+    padding: $spacing-xxl 0;
+    background: $color-bg-dark;
+    
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: $spacing-md;
+    }
+}
+
+.category-card {
+    position: relative;
+    height: 150px;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    
+    &:hover {
+        transform: scale(1.05);
+    }
+    
+    &__bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    
+    &__name {
+        position: relative;
+        z-index: 1;
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+}
+
+// ========================================
+// CTA секция
+// ========================================
+
+.cta {
+    background: linear-gradient(135deg, $color-secondary, $color-primary);
+    padding: $spacing-xxl 0;
+    
+    &__container {
+        text-align: center;
+        color: white;
+    }
+    
+    &__title {
+        font-size: 2.5rem;
+        margin-bottom: $spacing-md;
+    }
+    
+    &__text {
+        font-size: 1.25rem;
+        margin-bottom: $spacing-xl;
+        opacity: 0.9;
+    }
+}
+
+// ========================================
+// Footer
+// ========================================
+
+.footer {
+    background: $color-primary-dark;
+    color: white;
+    margin-top: auto;
+    
+    &__container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: $spacing-xl;
+        padding: $spacing-xxl $spacing-md;
+    }
+    
+    &__col {
+        &:nth-child(1) {
+            max-width: 300px;
+        }
+    }
+    
+    &__desc {
+        opacity: 0.8;
+        line-height: 1.8;
+    }
+    
+    &__title {
+        font-family: $font-main;
+        font-size: 1.1rem;
+        margin-bottom: $spacing-md;
+        color: white;
+    }
+    
+    &__link {
+        display: block;
+        padding: $spacing-xs 0;
+        opacity: 0.8;
+        
+        &:hover {
+            opacity: 1;
+            color: $color-accent;
+        }
+    }
+    
+    &__phone {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    &__address {
+        opacity: 0.8;
+        line-height: 1.8;
+    }
+    
+    &__bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: $spacing-md 0;
+        text-align: center;
+        opacity: 0.6;
+        font-size: 0.9rem;
+    }
+}
+
+// ========================================
+// Page Header
+// ========================================
+
+.page-header {
+    background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+    padding: $spacing-xxl 0;
+    text-align: center;
+    color: white;
+    
+    &__title {
+        font-size: 2.5rem;
+        margin-bottom: $spacing-sm;
+    }
+    
+    &__subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+}
+
+// ========================================
+// Каталог
+// ========================================
+
+.catalog {
+    padding: $spacing-xxl 0;
+    flex: 1;
+    
+    &__container {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: $spacing-xl;
+        
+        @media (max-width: 992px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.catalog-sidebar {
+    @media (max-width: 992px) {
+        margin-bottom: $spacing-xl;
+    }
+}
+
+.catalog-nav {
+    display: flex;
+    flex-direction: column;
+    background: $color-bg-light;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+    
+    &__link {
+        display: block;
+        padding: $spacing-md $spacing-lg;
+        border-bottom: 1px solid $color-border-light;
+        font-weight: 500;
+        transition: $transition;
+        
+        &:hover {
+            background: $color-bg-dark;
+            padding-left: $spacing-xl;
+        }
+        
+        &--active {
+            background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+            color: white;
+        }
+        
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+.catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    
+    @media (max-width: 500px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.catalog-title {
+    font-size: 1.5rem;
+    color: $color-primary;
+    margin-bottom: 0;
+}
+
+.catalog-sort {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+}
+
+.sort-select {
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
+    background: $color-bg-light;
+    cursor: pointer;
+    transition: $transition;
+    
+    &:focus {
+        outline: none;
+        border-color: $color-primary;
+    }
+}
+
+// ========================================
+// Корзина
+// ========================================
+
+.cart-page {
+    padding: $spacing-xxl 0;
+    flex: 1;
+}
+
+.cart-empty {
+    text-align: center;
+    padding: $spacing-xxl;
+    
+    &__icon {
+        font-size: 5rem;
+        margin-bottom: $spacing-md;
+        opacity: 0.5;
+    }
+    
+    &__title {
+        font-size: 2rem;
+        margin-bottom: $spacing-sm;
+        color: $color-text;
+    }
+    
+    &__text {
+        color: $color-text-light;
+        margin-bottom: $spacing-xl;
+    }
+}
+
+.cart-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: $spacing-xl;
+    
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: $spacing-lg;
+    padding: $spacing-lg;
+    background: $color-bg-light;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-sm;
+    
+    @media (max-width: 600px) {
+        grid-template-columns: 80px 1fr;
+        
+        .cart-item__remove {
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
+    }
+    
+    &__image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: $border-radius;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        
+        @media (max-width: 600px) {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
+    }
+    
+    &__info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    &__title {
+        font-size: 1.1rem;
+        margin-bottom: $spacing-xs;
+    }
+    
+    &__price {
+        color: $color-primary;
+        font-weight: 600;
+    }
+    
+    &__quantity {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        justify-content: flex-end;
+        
+        @media (max-width: 600px) {
+            justify-content: flex-start;
+            margin-top: $spacing-sm;
+        }
+    }
+    
+    &__btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: $color-bg-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: $transition;
+        
+        &:hover {
+            background: $color-primary;
+            color: white;
+        }
+    }
+    
+    &__remove {
+        color: $color-error;
+        font-size: 0.9rem;
+        transition: $transition;
+        
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.cart-summary {
+    background: $color-bg-light;
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+    box-shadow: $shadow-md;
+    position: sticky;
+    top: 100px;
+    
+    &__title {
+        font-size: 1.5rem;
+        margin-bottom: $spacing-lg;
+        color: $color-primary;
+    }
+    
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        padding: $spacing-sm 0;
+        border-bottom: 1px solid $color-border-light;
+    }
+    
+    &__total {
+        display: flex;
+        justify-content: space-between;
+        padding: $spacing-md 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $color-primary;
+    }
+    
+    &__link {
+        display: block;
+        text-align: center;
+        margin-top: $spacing-md;
+        color: $color-primary;
+        font-weight: 500;
+        
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// ========================================
+// Оформление заказа (Checkout)
+// ========================================
+
+.checkout {
+    padding: $spacing-xxl 0;
+    flex: 1;
+    
+    &-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: $spacing-xl;
+        
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.form {
+    &-section {
+        background: $color-bg-light;
+        border-radius: $border-radius-lg;
+        padding: $spacing-xl;
+        margin-bottom: $spacing-lg;
+        box-shadow: $shadow-sm;
+        
+        &__title {
+            font-size: 1.25rem;
+            color: $color-primary;
+            margin-bottom: $spacing-lg;
+        }
+    }
+    
+    &-group {
+        margin-bottom: $spacing-md;
+    }
+    
+    &-label {
+        display: block;
+        margin-bottom: $spacing-xs;
+        font-weight: 500;
+    }
+    
+    &-input {
+        width: 100%;
+        padding: $spacing-md;
+        border: 1px solid $color-border;
+        border-radius: $border-radius;
+        transition: $transition;
+        
+        &:focus {
+            outline: none;
+            border-color: $color-primary;
+            box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+        }
+        
+        &--textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+    }
+    
+    &-required {
+        color: $color-error;
+    }
+}
+
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.payment-option {
+    cursor: pointer;
+    
+    input[type="radio"] {
+        display: none;
+        
+        &:checked + .payment-option__card {
+            border-color: $color-primary;
+            background: rgba($color-primary, 0.05);
+        }
+    }
+    
+    &__card {
+        display: flex;
+        align-items: center;
+        gap: $spacing-md;
+        padding: $spacing-md;
+        border: 2px solid $color-border;
+        border-radius: $border-radius;
+        transition: $transition;
+        
+        &:hover {
+            border-color: $color-primary;
+        }
+    }
+    
+    &__icon {
+        font-size: 2rem;
+    }
+    
+    &__info {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    &__name {
+        font-weight: 600;
+    }
+    
+    &__desc {
+        font-size: 0.85rem;
+        color: $color-text-light;
+    }
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    cursor: pointer;
+    
+    input[type="checkbox"] {
+        margin-top: 3px;
+    }
+}
+
+.checkbox-text {
+    font-size: 0.9rem;
+    color: $color-text-light;
+    
+    .link {
+        color: $color-primary;
+        text-decoration: underline;
+        
+        &:hover {
+            color: $color-primary-dark;
+        }
+    }
+}
+
+.checkout-summary {
+    background: $color-bg-light;
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+    box-shadow: $shadow-md;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+    
+    &__title {
+        font-size: 1.5rem;
+        color: $color-primary;
+        margin-bottom: $spacing-lg;
+    }
+}
+
+.checkout-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: $spacing-lg;
+}
+
+.checkout-item {
+    display: flex;
+    gap: $spacing-md;
+    padding: $spacing-md 0;
+    border-bottom: 1px solid $color-border-light;
+    
+    &:last-child {
+        border-bottom: none;
+    }
+    
+    &__image {
+        width: 60px;
+        height: 60px;
+        border-radius: $border-radius;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    &__info {
+        flex: 1;
+    }
+    
+    &__title {
+        font-size: 0.95rem;
+        margin-bottom: $spacing-xs;
+    }
+    
+    &__quantity {
+        font-size: 0.85rem;
+        color: $color-text-light;
+    }
+    
+    &__price {
+        font-weight: 600;
+        color: $color-primary;
+    }
+}
+
+.checkout-totals {
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        padding: $spacing-sm 0;
+        border-bottom: 1px solid $color-border-light;
+    }
+    
+    &__total {
+        display: flex;
+        justify-content: space-between;
+        padding: $spacing-md 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $color-primary;
+    }
+}
+
+// ========================================
+// Модальное окно
+// ========================================
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    
+    &.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    &__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    &__content {
+        position: relative;
+        background: $color-bg-light;
+        border-radius: $border-radius-lg;
+        padding: $spacing-xxl;
+        max-width: 500px;
+        width: 90%;
+        z-index: 1;
+    }
+    
+    &__close {
+        position: absolute;
+        top: $spacing-md;
+        right: $spacing-md;
+        font-size: 2rem;
+        color: $color-text-light;
+        transition: $transition;
+        
+        &:hover {
+            color: $color-text;
+        }
+    }
+}
+
+.success-message {
+    text-align: center;
+    
+    &__icon {
+        font-size: 4rem;
+        margin-bottom: $spacing-md;
+    }
+    
+    &__title {
+        font-size: 1.75rem;
+        color: $color-success;
+        margin-bottom: $spacing-md;
+    }
+    
+    &__text {
+        color: $color-text-light;
+        margin-bottom: $spacing-xl;
+    }
+}
+
+// ========================================
+// Контакты
+// ========================================
+
+.contacts {
+    padding: $spacing-xxl 0;
+    flex: 1;
+    
+    &-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $spacing-xl;
+        margin-bottom: $spacing-xxl;
+        
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.contacts-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-md;
+}
+
+.contacts-card {
+    background: $color-bg-light;
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+    text-align: center;
+    box-shadow: $shadow-sm;
+    transition: $transition;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-md;
+    }
+    
+    &__icon {
+        font-size: 2.5rem;
+        margin-bottom: $spacing-md;
+    }
+    
+    &__title {
+        font-size: 1.1rem;
+        color: $color-primary;
+        margin-bottom: $spacing-sm;
+    }
+    
+    &__text {
+        color: $color-text-light;
+        line-height: 1.8;
+    }
+    
+    &__link {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $color-primary;
+        margin-bottom: $spacing-xs;
+        
+        &:hover {
+            color: $color-primary-dark;
+        }
+    }
+    
+    &__desc {
+        font-size: 0.9rem;
+        color: $color-text-light;
+    }
+}
+
+.contacts-map {
+    &__wrapper {
+        height: 100%;
+        min-height: 400px;
+        border-radius: $border-radius-lg;
+        overflow: hidden;
+        box-shadow: $shadow-md;
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+.contact-form-section {
+    max-width: 700px;
+    margin: 0 auto $spacing-xxl;
+}
+
+.contact-form {
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $spacing-md;
+        
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.about-petomnik {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xxl;
+    
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.about-item {
+    &__number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: $color-primary;
+        margin-bottom: $spacing-sm;
+    }
+    
+    &__text {
+        color: $color-text-light;
+    }
+}
+
+.about-text {
+    color: $color-text-light;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+// ========================================
+// Адаптивность
+// ========================================
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 $spacing-sm;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    
+    .hero {
+        min-height: 400px;
+        
+        &__title {
+            font-size: 2rem;
+        }
+        
+        &__subtitle {
+            font-size: 1.1rem;
+        }
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .categories-preview__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .cta__title {
+        font-size: 1.75rem;
+    }
+    
+    .page-header {
+        padding: $spacing-xl 0;
+        
+        &__title {
+            font-size: 1.75rem;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .categories-preview__grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: $spacing-md;
+    }
+    
+    .about-item__number {
+        font-size: 2rem;
+    }
+}

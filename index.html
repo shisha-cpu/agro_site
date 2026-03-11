@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Питомник растений «Хвойный» - Главная</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header" id="header">
+        <div class="container header__container">
+            <a href="index.html" class="logo">
+                <span class="logo__icon">🌲</span>
+                <span class="logo__text">Хвойный</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav__link nav__link--active">Главная</a>
+                <a href="catalog.html" class="nav__link">Каталог</a>
+                <a href="contacts.html" class="nav__link">Контакты</a>
+                <a href="admin.html" class="nav__link">Админка</a>
+            </nav>
+            <a href="cart.html" class="cart-btn">
+                <span class="cart-btn__icon">🛒</span>
+                <span class="cart-btn__count" id="cart-count">0</span>
+            </a>
+            <button class="burger-btn" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobile-nav">
+            <a href="index.html" class="mobile-nav__link mobile-nav__link--active">Главная</a>
+            <a href="catalog.html" class="mobile-nav__link">Каталог</a>
+            <a href="cart.html" class="mobile-nav__link">Корзина</a>
+            <a href="contacts.html" class="mobile-nav__link">Контакты</a>
+            <a href="admin.html" class="mobile-nav__link">Админка</a>
+        </div>
+    </header>
+
+    <!-- Главный баннер -->
+    <section class="hero">
+        <span class="hero__decoration hero__decoration--1">🌿</span>
+        <span class="hero__decoration hero__decoration--2">🍃</span>
+        <span class="hero__decoration hero__decoration--3">🌲</span>
+        <div class="hero__content">
+            <h1 class="hero__title">Питомник растений «Хвойный»</h1>
+            <p class="hero__subtitle">Зелёная магия вашего сада</p>
+            <div class="hero__btn-wrapper">
+                <a href="catalog.html" class="btn btn--large btn--light">Перейти в каталог</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Почему выбирают нас</h2>
+            <p class="section-subtitle">Мы создаём растения с любовью и заботой уже более 10 лет</p>
+            <div class="features__grid">
+                <div class="feature-card">
+                    <div class="feature-card__icon">🌱</div>
+                    <h3 class="feature-card__title">Качественные саженцы</h3>
+                    <p class="feature-card__text">Все растения выращены в нашем питомнике с соблюдением всех стандартов качества</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">🚚</div>
+                    <h3 class="feature-card__title">Быстрая доставка</h3>
+                    <p class="feature-card__text">Доставим растения в целости и сохранности в удобное для вас время</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">💚</div>
+                    <h3 class="feature-card__title">Гарантия приживаемости</h3>
+                    <p class="feature-card__text">Даём гарантию на все растения и бесплатные консультации по посадке</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card__icon">🏆</div>
+                    <h3 class="feature-card__title">Опыт более 10 лет</h3>
+                    <p class="feature-card__text">Профессиональный подход и любовь к своему делу в каждом саженце</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные товары -->
+    <section class="popular" style="padding: 80px 0; background: var(--color-bg);">
+        <div class="container">
+            <h2 class="section-title">Популярные растения</h2>
+            <p class="section-subtitle">Наши бестселлеры, которые полюбились садоводам</p>
+            <div class="products-grid" id="popular-products">
+                <!-- Товары загружаются через JS -->
+            </div>
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="catalog.html" class="btn btn--large btn--outline">Смотреть весь каталог</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Категории -->
+    <section class="categories-preview">
+        <div class="container">
+            <h2 class="section-title">Категории растений</h2>
+            <p class="section-subtitle">Найдите идеальные растения для вашего ландшафта</p>
+            <div class="categories-preview__grid" id="home-categories">
+                <!-- Категории загружаются через JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Призыв к действию -->
+    <section class="cta">
+        <div class="container cta__container">
+            <h2 class="cta__title">Готовы создать сад мечты?</h2>
+            <p class="cta__text">Перейдите в каталог и выберите растения для вашего участка</p>
+            <a href="catalog.html" class="btn btn--large btn--primary">В каталог</a>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container footer__container">
+            <div class="footer__col">
+                <a href="index.html" class="logo logo--light">
+                    <span class="logo__icon">🌲</span>
+                    <span class="logo__text">Хвойный</span>
+                </a>
+                <p class="footer__desc">Питомник растений с душой и заботой о каждом клиенте. Мы выращиваем красоту для вашего сада с любовью и профессионализмом.</p>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__title">Навигация</h4>
+                <a href="index.html" class="footer__link">Главная</a>
+                <a href="catalog.html" class="footer__link">Каталог</a>
+                <a href="cart.html" class="footer__link">Корзина</a>
+                <a href="contacts.html" class="footer__link">Контакты</a>
+            </div>
+            <div class="footer__col">
+                <h4 class="footer__title">Контакты</h4>
+                <a href="tel:+79219503595" class="footer__link footer__phone">+7 (921) 950-35-95</a>
+                <a href="mailto:greenmagics@mail.ru" class="footer__link">greenmagics@mail.ru</a>
+                <p class="footer__address">📍 Ленинградская обл.,<br>Симагинские Высоты,<br>Дубовый проезд 11</p>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container">
+                <p>&copy; 2026 Питомник растений «Хвойный». Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Загрузка категорий на главную
+        async function loadHomeCategories() {
+            await new Promise(resolve => {
+                const check = () => {
+                    if (typeof categories !== 'undefined' && categories.length > 0) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+
+            const container = document.getElementById('home-categories');
+            if (!container) return;
+
+            const gradients = {
+                'хвойные': 'linear-gradient(135deg, #1a5f3a 0%, #0f3d24 100%)',
+                'лиственные': 'linear-gradient(135deg, #4a7c3a 0%, #2d5a1a 100%)',
+                'плодовые': 'linear-gradient(135deg, #e67e22 0%, #b85c1a 100%)',
+                'многолетники': 'linear-gradient(135deg, #9b59b6 0%, #6c3a8a 100%)',
+                'злаки': 'linear-gradient(135deg, #d4a353 0%, #a87a2a 100%)',
+                'цветы': 'linear-gradient(135deg, #e91e63 0%, #a81a4a 100%)',
+                'тропические': 'linear-gradient(135deg, #00bcd4 0%, #008ba3 100%)',
+                'иммуностимуляторы': 'linear-gradient(135deg, #8b7355 0%, #5c4a3a 100%)',
+                'рододендроны': 'linear-gradient(135deg, #ff6b9d 0%, #c44569 100%)',
+                'лианы': 'linear-gradient(135deg, #6ab04c 0%, #3d7a2a 100%)'
+            };
+
+            container.innerHTML = '';
+            categories.forEach(cat => {
+                const link = document.createElement('a');
+                link.href = `catalog.html?category=${cat.id}`;
+                link.className = 'category-card';
+                const gradient = gradients[cat.id] || 'linear-gradient(135deg, #4a7c59 0%, #2d5033 100%)';
+                link.innerHTML = `
+                    <div class="category-card__bg" style="background: ${gradient};"></div>
+                    <span class="category-card__name">${cat.emoji} ${cat.name}</span>
+                `;
+                container.appendChild(link);
+            });
+        }
+
+        // Загрузка популярных товаров
+        async function loadPopularProducts() {
+            await new Promise(resolve => {
+                const check = () => {
+                    if (typeof products !== 'undefined' && products.length > 0) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+
+            const popularContainer = document.getElementById('popular-products');
+            if (!popularContainer) return;
+
+            const popularProducts = products.filter(p => p.popular).slice(0, 8);
+            popularProducts.forEach(product => {
+                const card = createProductCard(product);
+                popularContainer.appendChild(card);
+            });
+        }
+
+        // Запускаем после загрузки DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHomeCategories();
+            loadPopularProducts();
+        });
+
+        // Эффект скролла для шапки
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

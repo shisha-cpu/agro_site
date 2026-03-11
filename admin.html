@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Импорт прайса</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .admin-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .admin-card { background: #fff; border-radius: 12px; padding: 30px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .admin-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #2d5033; margin-bottom: 20px; }
+        .upload-area { border: 2px dashed #4a7c59; border-radius: 8px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .upload-area:hover, .upload-area.dragover { background: #f0f7f4; border-color: #2d5033; }
+        .upload-icon { font-size: 3rem; margin-bottom: 16px; }
+        .upload-text { font-size: 1.1rem; color: #666; margin-bottom: 16px; }
+        .btn { display: inline-block; padding: 12px 24px; background: #4a7c59; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+        .btn:hover { background: #2d5033; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+        .stat-card { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #4a7c59; }
+        .stat-label { color: #666; margin-top: 8px; }
+        .progress-bar { width: 100%; height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden; margin-top: 16px; }
+        .progress-fill { height: 100%; background: #4a7c59; width: 0%; transition: width 0.3s; }
+        .log { background: #1e1e1e; color: #0f0; padding: 16px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 0.9rem; max-height: 300px; overflow-y: auto; margin-top: 16px; }
+        .log-entry { margin-bottom: 4px; }
+        .log-error { color: #ff6b6b; }
+        .log-success { color: #51cf66; }
+        .categories-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 16px; }
+        .category-item { background: #f8f9fa; padding: 12px 16px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .category-name { font-weight: 500; }
+        .category-count { background: #4a7c59; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; }
+        .hidden-input { display: none; }
+        .data-preview { margin-top: 20px; overflow-x: auto; }
+        .data-preview table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-preview th, .data-preview td { border: 1px solid #dee2e6; padding: 10px; text-align: left; }
+        .data-preview th { background: #4a7c59; color: #fff; }
+        .data-preview tr:nth-child(even) { background: #f8f9fa; }
+        .server-status { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #f8f9fa; border-radius: 6px; margin-bottom: 20px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
+        .status-dot.online { background: #51cf66; box-shadow: 0 0 8px #51cf66; }
+        .status-dot.offline { background: #ff6b6b; }
+        .info-box { background: #e8f5e9; border-left: 4px solid #4a7c59; padding: 16px; border-radius: 4px; margin-bottom: 20px; }
+        .info-box h4 { margin-bottom: 8px; color: #2d5033; }
+        .info-box p { color: #555; font-size: 0.95rem; margin: 4px 0; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #5a6268; }
+        .import-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+    </style>
+</head>
+<body>
+    <header class="header" id="header">
+        <div class="container header__container">
+            <a href="index.html" class="logo">
+                <span class="logo__icon">🌲</span>
+                <span class="logo__text">Хвойный</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav__link">Главная</a>
+                <a href="catalog.html" class="nav__link">Каталог</a>
+                <a href="contacts.html" class="nav__link">Контакты</a>
+                <a href="admin.html" class="nav__link nav__link--active">Админка</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <div class="admin-card">
+            <div class="server-status">
+                <div class="status-dot" id="serverStatusDot"></div>
+                <span id="serverStatusText">Подключение к серверу...</span>
+            </div>
+            
+            <div class="info-box">
+                <h4>📝 Как использовать</h4>
+                <p><strong>Шаг 1:</strong> Убедитесь, что сервер запущен (<code>npm start</code>)</p>
+                <p><strong>Шаг 2:</strong> Загрузите XLSX файл с прайсом или JSON файл (data.json)</p>
+                <p><strong>Шаг 3:</strong> Данные сохранятся в MongoDB и появятся на сайте</p>
+                <p style="margin-top: 8px;"><strong>💡 Быстрый импорт:</strong> Используйте кнопку "Импорт из data.json" для загрузки данных из локального файла</p>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h1 class="admin-title">📤 Импорт прайс-листа</h1>
+            <p style="color: #666; margin-bottom: 20px;">Загрузите XLSX или JSON файл. Данные сохранятся в базе данных.</p>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Перетащите XLSX или JSON файл сюда или кликните для выбора</div>
+                <div class="import-buttons">
+                    <button class="btn" id="uploadBtn" onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
+                    <button class="btn btn-secondary" onclick="importLocalJson()">📥 Импорт из data.json</button>
+                </div>
+                <input type="file" id="fileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
+            </div>
+
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="log" id="log" style="display: none;"></div>
+        </div>
+
+        <div class="admin-card" id="statsCard" style="display: none;">
+            <h2 class="admin-title">📊 Статистика</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalProducts">0</div>
+                    <div class="stat-label">Всего товаров</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCategories">0</div>
+                    <div class="stat-label">Категорий</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="importDate">-</div>
+                    <div class="stat-label">Дата импорта</div>
+                </div>
+            </div>
+            <h3 style="margin-top: 24px; color: #2d5033;">Категории:</h3>
+            <div class="categories-list" id="categoriesList"></div>
+            <div class="btn-group" style="margin-top: 24px;">
+                <button class="btn" onclick="viewData()">👁️ Просмотреть данные</button>
+                <button class="btn btn-danger" onclick="clearData()">🗑️ Удалить все данные</button>
+            </div>
+        </div>
+
+        <div class="admin-card" id="previewCard" style="display: none;">
+            <h2 class="admin-title">📋 Превью (первые 20 товаров)</h2>
+            <div class="data-preview" id="dataPreview"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const logDiv = document.getElementById('log');
+        const statsCard = document.getElementById('statsCard');
+        const previewCard = document.getElementById('previewCard');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const serverStatusDot = document.getElementById('serverStatusDot');
+        const serverStatusText = document.getElementById('serverStatusText');
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            if (type === 'error') entry.classList.add('log-error');
+            if (type === 'success') entry.classList.add('log-success');
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                if (response.ok) {
+                    serverStatusDot.classList.add('online');
+                    serverStatusDot.classList.remove('offline');
+                    serverStatusText.textContent = 'Сервер подключён (localhost:3000)';
+                    loadData();
+                } else {
+                    throw new Error('Сервер недоступен');
+                }
+            } catch (error) {
+                serverStatusDot.classList.add('offline');
+                serverStatusDot.classList.remove('online');
+                serverStatusText.textContent = 'Сервер недоступен. Запустите: npm start';
+            }
+        }
+
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) uploadFile(file);
+        });
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) uploadFile(file);
+        });
+
+        async function uploadFile(file) {
+            logDiv.style.display = 'block';
+            logDiv.innerHTML = '';
+            progressBar.style.display = 'block';
+            progressFill.style.width = '0%';
+            uploadBtn.disabled = true;
+
+            log(`Загрузка файла: ${file.name}`, 'info');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Определяем тип файла и выбираем эндпоинт
+            const isJson = file.name.endsWith('.json');
+            const endpoint = isJson ? 'upload-json' : 'upload-xlsx';
+
+            try {
+                const response = await fetch(`${API_URL}/import/${endpoint}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    log(`✅ ${result.message}`, 'success');
+                    log(`Товаров: ${result.stats.products}, Категорий: ${result.stats.categories}`, 'info');
+                    progressFill.style.width = '100%';
+                    loadData();
+                } else {
+                    log(`❌ Ошибка: ${result.error}`, 'error');
+                    progressFill.style.width = '0%';
+                }
+            } catch (error) {
+                log(`❌ Ошибка загрузки: ${error.message}`, 'error');
+                progressFill.style.width = '0%';
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        }
+
+        async function importLocalJson() {
+            logDiv.style.display = 'block';
+            logDiv.innerHTML = '';
+            progressBar.style.display = 'block';
+            progressFill.style.width = '0%';
+            uploadBtn.disabled = true;
+
+            log('🔄 Импорт данных из data.json...', 'info');
+
+            try {
+                const response = await fetch(`${API_URL}/import/import-local`, {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    log(`✅ ${result.message}`, 'success');
+                    log(`Товаров: ${result.stats.products}, Категорий: ${result.stats.categories}`, 'info');
+                    progressFill.style.width = '100%';
+                    loadData();
+                } else {
+                    log(`❌ Ошибка: ${result.error}`, 'error');
+                    progressFill.style.width = '0%';
+                }
+            } catch (error) {
+                log(`❌ Ошибка импорта: ${error.message}`, 'error');
+                progressFill.style.width = '0%';
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        }
+
+        async function loadData() {
+            try {
+                const [productsRes, categoriesRes] = await Promise.all([
+                    fetch(`${API_URL}/products`),
+                    fetch(`${API_URL}/categories`)
+                ]);
+
+                const productsData = await productsRes.json();
+                const categoriesData = await categoriesRes.json();
+
+                if (productsData.success && categoriesData.success) {
+                    showStats(productsData.data, categoriesData.data);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+            }
+        }
+
+        function showStats(products, categories) {
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('totalCategories').textContent = categories.length;
+            document.getElementById('importDate').textContent = new Date().toLocaleDateString();
+
+            const categoriesList = document.getElementById('categoriesList');
+            categoriesList.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const item = document.createElement('div');
+                item.className = 'category-item';
+                item.innerHTML = `
+                    <span class="category-name">${cat.emoji} ${cat.name}</span>
+                    <span class="category-count">${cat.count || 0}</span>
+                `;
+                categoriesList.appendChild(item);
+            });
+
+            statsCard.style.display = 'block';
+            previewCard.style.display = 'block';
+            showPreview(products);
+        }
+
+        function showPreview(products) {
+            const preview = document.getElementById('dataPreview');
+            const previewProducts = products.slice(0, 20);
+
+            let html = '<table><thead><tr><th>Название</th><th>Латинское</th><th>Кондиция</th><th>Цена</th><th>Категория</th></tr></thead><tbody>';
+            previewProducts.forEach(p => {
+                html += `<tr><td>${p.name}</td><td>${p.latin || '-'}</td><td>${p.condition || '-'}</td><td>${p.price.toLocaleString('ru-RU')} ₽</td><td>${p.category}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            preview.innerHTML = html;
+        }
+
+        function viewData() {
+            previewCard.style.display = 'block';
+            previewCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function clearData() {
+            if (confirm('Вы уверены, что хотите удалить все данные?')) {
+                try {
+                    const response = await fetch(`${API_URL}/import/data`, { method: 'DELETE' });
+                    const result = await response.json();
+                    if (result.success) {
+                        log('✅ Данные удалены', 'success');
+                        setTimeout(() => {
+                            statsCard.style.display = 'none';
+                            previewCard.style.display = 'none';
+                            logDiv.style.display = 'none';
+                        }, 2000);
+                    }
+                } catch (error) {
+                    log(`❌ Ошибка: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkServerStatus();
+        });
+    </script>
+</body>
+</html>
