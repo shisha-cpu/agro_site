@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: agro-site
+    env: node
+    buildCommand: npm install
+    startCommand: node server/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: YOOKASSA_SHOP_ID
+        sync: false
+      - key: YOOKASSA_SECRET_KEY
+        sync: false
+      - key: YOOKASSA_TEST_MODE
+        value: "true"
+    freeDisk: true

@@ -56,6 +56,16 @@
         </div>
     </section>
 
+    <!-- Информация о посещении -->
+    <section class="visit-info" style="background: var(--color-primary); color: white; padding: 24px 0; text-align: center;">
+        <div class="container">
+            <p style="font-size: 1.1rem; margin: 0;">
+                📝 <strong>Питомник работает только по предварительной записи!</strong> 
+                Позвоните нам: <a href="tel:+79219503595" style="color: white; text-decoration: underline;">+7 (921) 950-35-95</a>
+            </p>
+        </div>
+    </section>
+
     <!-- Преимущества -->
     <section class="features">
         <div class="container">
@@ -86,10 +96,10 @@
         </div>
     </section>
 
-    <!-- Популярные товары -->
+    <!-- Хиты продаж -->
     <section class="popular" style="padding: 80px 0; background: var(--color-bg);">
         <div class="container">
-            <h2 class="section-title">Популярные растения</h2>
+            <h2 class="section-title">Хиты продаж</h2>
             <p class="section-subtitle">Наши бестселлеры, которые полюбились садоводам</p>
             <div class="products-grid" id="popular-products">
                 <!-- Товары загружаются через JS -->
@@ -141,7 +151,8 @@
                 <h4 class="footer__title">Контакты</h4>
                 <a href="tel:+79219503595" class="footer__link footer__phone">+7 (921) 950-35-95</a>
                 <a href="mailto:greenmagics@mail.ru" class="footer__link">greenmagics@mail.ru</a>
-                <p class="footer__address">📍 Ленинградская обл.,<br>Симагинские Высоты,<br>Дубовый проезд 11</p>
+                <p class="footer__address">📍 Ленинградская обл.,<br>Выборгский район,<br>Симагино</p>
+                <p class="footer__note" style="margin-top: 8px; font-size: 0.85rem; color: var(--color-text-muted);">📝 Только по предварительной записи</p>
             </div>
         </div>
         <div class="footer__bottom">
@@ -174,8 +185,6 @@
                 'хвойные': 'linear-gradient(135deg, #1a5f3a 0%, #0f3d24 100%)',
                 'лиственные': 'linear-gradient(135deg, #4a7c3a 0%, #2d5a1a 100%)',
                 'плодовые': 'linear-gradient(135deg, #e67e22 0%, #b85c1a 100%)',
-                'многолетники': 'linear-gradient(135deg, #9b59b6 0%, #6c3a8a 100%)',
-                'злаки': 'linear-gradient(135deg, #d4a353 0%, #a87a2a 100%)',
                 'цветы': 'linear-gradient(135deg, #e91e63 0%, #a81a4a 100%)',
                 'тропические': 'linear-gradient(135deg, #00bcd4 0%, #008ba3 100%)',
                 'иммуностимуляторы': 'linear-gradient(135deg, #8b7355 0%, #5c4a3a 100%)',
@@ -197,8 +206,9 @@
             });
         }
 
-        // Загрузка популярных товаров
+        // Загрузка хитов продаж
         async function loadPopularProducts() {
+            // Ждём загрузки данных
             await new Promise(resolve => {
                 const check = () => {
                     if (typeof products !== 'undefined' && products.length > 0) {
@@ -210,14 +220,29 @@
                 check();
             });
 
-            const popularContainer = document.getElementById('popular-products');
-            if (!popularContainer) return;
+            try {
+                const response = await fetch('/api/hits');
+                const result = await response.json();
 
-            const popularProducts = products.filter(p => p.popular).slice(0, 8);
-            popularProducts.forEach(product => {
-                const card = createProductCard(product);
-                popularContainer.appendChild(card);
-            });
+                if (result.success && result.data.length > 0) {
+                    const hitsContainer = document.getElementById('popular-products');
+                    if (!hitsContainer) return;
+
+                    hitsContainer.innerHTML = '';
+                    result.data.forEach(product => {
+                        const card = createProductCard(product);
+                        hitsContainer.appendChild(card);
+                    });
+                } else if (result.success && result.data.length === 0) {
+                    // Если хитов нет, показываем сообщение
+                    const hitsContainer = document.getElementById('popular-products');
+                    if (hitsContainer) {
+                        hitsContainer.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">Хиты продаж пока не выбраны. Загляните в каталог!</p>';
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки хитов:', error);
+            }
         }
 
         // Запускаем после загрузки DOM

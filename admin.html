@@ -53,6 +53,34 @@
         .btn-secondary { background: #6c757d; }
         .btn-secondary:hover { background: #5a6268; }
         .import-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        
+        /* Табы */
+        .admin-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #e9ecef; padding-bottom: 0; }
+        .admin-tab { padding: 12px 24px; background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 1rem; color: #666; transition: all 0.3s; }
+        .admin-tab:hover { color: #4a7c59; }
+        .admin-tab.active { color: #2d5033; border-bottom-color: #4a7c59; font-weight: 600; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Хиты продаж */
+        .hits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 20px; }
+        .hit-card { background: #f8f9fa; border-radius: 8px; padding: 16px; position: relative; }
+        .hit-card__remove { position: absolute; top: 8px; right: 8px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 1.2rem; }
+        .hit-card__name { font-weight: 600; color: #2d5033; margin-bottom: 8px; }
+        .hit-card__price { color: #4a7c59; font-weight: 700; font-size: 1.1rem; }
+        
+        /* Заказы */
+        .orders-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 16px; }
+        .orders-table th, .orders-table td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        .orders-table th { background: #4a7c59; color: #fff; }
+        .orders-table tr:nth-child(even) { background: #f8f9fa; }
+        .order-status { padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; }
+        .order-status--pending { background: #fff3cd; color: #856404; }
+        .order-status--confirmed { background: #d1ecf1; color: #0c5460; }
+        .order-status--paid { background: #d4edda; color: #155724; }
+        .order-status--cancelled { background: #f8d7da; color: #721c24; }
+        .order-actions { display: flex; gap: 8px; }
+        .btn-small { padding: 6px 12px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -72,74 +100,167 @@
     </header>
 
     <div class="admin-container">
-        <div class="admin-card">
-            <div class="server-status">
-                <div class="status-dot" id="serverStatusDot"></div>
-                <span id="serverStatusText">Подключение к серверу...</span>
+        <!-- Табы навигации -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('import')">📥 Импорт</button>
+            <button class="admin-tab" onclick="switchTab('hits')">🔥 Хиты продаж</button>
+            <button class="admin-tab" onclick="switchTab('orders')">📋 Заказы</button>
+        </div>
+
+        <!-- Вкладка импорта -->
+        <div id="tab-import" class="tab-content active">
+            <div class="admin-card">
+                <div class="server-status">
+                    <div class="status-dot" id="serverStatusDot"></div>
+                    <span id="serverStatusText">Подключение к серверу...</span>
+                </div>
+
+                <div class="info-box">
+                    <h4>📝 Как использовать</h4>
+                    <p><strong>Шаг 1:</strong> Убедитесь, что сервер запущен (<code>npm start</code>)</p>
+                    <p><strong>Шаг 2:</strong> Загрузите XLSX файл с прайсом или JSON файл (data.json)</p>
+                    <p><strong>Шаг 3:</strong> Данные сохранятся и появятся на сайте</p>
+                    <p style="margin-top: 8px;"><strong>💡 Быстрый импорт:</strong> Используйте кнопку "Импорт из data.json" для загрузки данных из локального файла</p>
+                </div>
             </div>
-            
-            <div class="info-box">
-                <h4>📝 Как использовать</h4>
-                <p><strong>Шаг 1:</strong> Убедитесь, что сервер запущен (<code>npm start</code>)</p>
-                <p><strong>Шаг 2:</strong> Загрузите XLSX файл с прайсом или JSON файл (data.json)</p>
-                <p><strong>Шаг 3:</strong> Данные сохранятся в MongoDB и появятся на сайте</p>
-                <p style="margin-top: 8px;"><strong>💡 Быстрый импорт:</strong> Используйте кнопку "Импорт из data.json" для загрузки данных из локального файла</p>
+
+            <div class="admin-card">
+                <h1 class="admin-title">📤 Импорт прайс-листа</h1>
+                <p style="color: #666; margin-bottom: 20px;">Загрузите XLSX или JSON файл. Данные сохранятся.</p>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Перетащите XLSX или JSON файл сюда или кликните для выбора</div>
+                    <div class="import-buttons">
+                        <button class="btn" id="uploadBtn" onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
+                        <button class="btn btn-secondary" onclick="importLocalJson()">📥 Импорт из data.json</button>
+                    </div>
+                    <input type="file" id="fileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
+                </div>
+
+                <div class="progress-bar" id="progressBar" style="display: none;">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="log" id="log" style="display: none;"></div>
+            </div>
+
+            <div class="admin-card" id="statsCard" style="display: none;">
+                <h2 class="admin-title">📊 Статистика</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalProducts">0</div>
+                        <div class="stat-label">Всего товаров</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCategories">0</div>
+                        <div class="stat-label">Категорий</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="importDate">-</div>
+                        <div class="stat-label">Дата импорта</div>
+                    </div>
+                </div>
+                <h3 style="margin-top: 24px; color: #2d5033;">Категории:</h3>
+                <div class="categories-list" id="categoriesList"></div>
+                <div class="btn-group" style="margin-top: 24px;">
+                    <button class="btn" onclick="viewData()">👁️ Просмотреть данные</button>
+                    <button class="btn btn-danger" onclick="clearData()">🗑️ Удалить все данные</button>
+                </div>
+            </div>
+
+            <div class="admin-card" id="previewCard" style="display: none;">
+                <h2 class="admin-title">📋 Превью (первые 20 товаров)</h2>
+                <div class="data-preview" id="dataPreview"></div>
             </div>
         </div>
 
-        <div class="admin-card">
-            <h1 class="admin-title">📤 Импорт прайс-листа</h1>
-            <p style="color: #666; margin-bottom: 20px;">Загрузите XLSX или JSON файл. Данные сохранятся в базе данных.</p>
+        <!-- Вкладка хитов продаж -->
+        <div id="tab-hits" class="tab-content">
+            <div class="admin-card">
+                <h1 class="admin-title">🔥 Хиты продаж</h1>
+                <p style="color: #666; margin-bottom: 20px;">Загрузите XLSX или JSON файл с хитами продаж (максимум 9 товаров)</p>
+                
+                <div class="info-box">
+                    <h4>📝 Как использовать</h4>
+                    <p><strong>Шаг 1:</strong> Подготовьте XLSX файл с хитами (формат: Название, Латинское, Кондиция, Цена)</p>
+                    <p><strong>Шаг 2:</strong> Загрузите файл через форму ниже</p>
+                    <p><strong>Шаг 3:</strong> Хиты отобразятся на главной странице</p>
+                    <p style="margin-top: 8px;"><strong>💡 Формат XLSX:</strong> Первый лист будет использован, максимум 9 товаров</p>
+                </div>
+                
+                <div class="upload-area" id="hitsUploadArea" style="margin-top: 20px;">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Перетащите XLSX или JSON файл сюда или кликните для выбора</div>
+                    <div class="import-buttons">
+                        <button class="btn" id="hitsUploadBtn" onclick="document.getElementById('hitsFileInput').click()">Выбрать файл</button>
+                    </div>
+                    <input type="file" id="hitsFileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
+                </div>
 
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📁</div>
-                <div class="upload-text">Перетащите XLSX или JSON файл сюда или кликните для выбора</div>
-                <div class="import-buttons">
-                    <button class="btn" id="uploadBtn" onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
-                    <button class="btn btn-secondary" onclick="importLocalJson()">📥 Импорт из data.json</button>
+                <div class="progress-bar" id="hitsProgressBar" style="display: none; margin-top: 16px;">
+                    <div class="progress-fill" id="hitsProgressFill"></div>
                 </div>
-                <input type="file" id="fileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
-            </div>
-
-            <div class="progress-bar" id="progressBar" style="display: none;">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="log" id="log" style="display: none;"></div>
-        </div>
-
-        <div class="admin-card" id="statsCard" style="display: none;">
-            <h2 class="admin-title">📊 Статистика</h2>
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalProducts">0</div>
-                    <div class="stat-label">Всего товаров</div>
+                <div class="log" id="hitsLog" style="display: none; margin-top: 16px;"></div>
+                
+                <div style="margin-top: 20px;">
+                    <h3 style="color: #2d5033; margin-bottom: 12px;">Текущие хиты:</h3>
+                    <div class="hits-grid" id="hitsGrid"></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalCategories">0</div>
-                    <div class="stat-label">Категорий</div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-danger" onclick="clearHits()">🗑️ Удалить все хиты</button>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="importDate">-</div>
-                    <div class="stat-label">Дата импорта</div>
-                </div>
-            </div>
-            <h3 style="margin-top: 24px; color: #2d5033;">Категории:</h3>
-            <div class="categories-list" id="categoriesList"></div>
-            <div class="btn-group" style="margin-top: 24px;">
-                <button class="btn" onclick="viewData()">👁️ Просмотреть данные</button>
-                <button class="btn btn-danger" onclick="clearData()">🗑️ Удалить все данные</button>
             </div>
         </div>
 
-        <div class="admin-card" id="previewCard" style="display: none;">
-            <h2 class="admin-title">📋 Превью (первые 20 товаров)</h2>
-            <div class="data-preview" id="dataPreview"></div>
+        <!-- Вкладка заказов -->
+        <div id="tab-orders" class="tab-content">
+            <div class="admin-card">
+                <h1 class="admin-title">📋 Заказы</h1>
+                <p style="color: #666; margin-bottom: 20px;">Управление заказами покупателей</p>
+                
+                <button class="btn" onclick="loadOrders()" style="margin-bottom: 16px;">🔄 Обновить</button>
+                
+                <div style="overflow-x: auto;">
+                    <table class="orders-table" id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Клиент</th>
+                                <th>Телефон</th>
+                                <th>Сумма</th>
+                                <th>Оплата</th>
+                                <th>Статус</th>
+                                <th>Дата</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersBody">
+                            <tr><td colspan="8" style="text-align: center; color: #666;">Заказов нет</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         const API_URL = 'http://localhost:3000/api';
-        
+        let currentHits = [];
+        let allProducts = [];
+
+        // Переключение табов
+        function switchTab(tabName) {
+            document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            if (tabName === 'hits') loadHits();
+            if (tabName === 'orders') loadOrders();
+        }
+
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const progressBar = document.getElementById('progressBar');
@@ -346,6 +467,228 @@
         window.addEventListener('DOMContentLoaded', () => {
             checkServerStatus();
         });
+
+        // ========================================
+        // Хиты продаж
+        // ========================================
+
+        const hitsUploadArea = document.getElementById('hitsUploadArea');
+        const hitsFileInput = document.getElementById('hitsFileInput');
+        const hitsProgressBar = document.getElementById('hitsProgressBar');
+        const hitsProgressFill = document.getElementById('hitsProgressFill');
+        const hitsLogDiv = document.getElementById('hitsLog');
+        const hitsUploadBtn = document.getElementById('hitsUploadBtn');
+
+        // Обработчики для загрузки хитов
+        if (hitsUploadArea && hitsFileInput) {
+            hitsUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                hitsUploadArea.classList.add('dragover');
+            });
+            
+            hitsUploadArea.addEventListener('dragleave', () => {
+                hitsUploadArea.classList.remove('dragover');
+            });
+            
+            hitsUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                hitsUploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) uploadHitsFile(file);
+            });
+            
+            hitsFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) uploadHitsFile(file);
+            });
+        }
+
+        async function uploadHitsFile(file) {
+            hitsLogDiv.style.display = 'block';
+            hitsLogDiv.innerHTML = '';
+            hitsProgressBar.style.display = 'block';
+            hitsProgressFill.style.width = '0%';
+            hitsUploadBtn.disabled = true;
+
+            log(`Загрузка файла: ${file.name}`, 'info', hitsLogDiv);
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Определяем тип файла и выбираем эндпоинт
+            const isJson = file.name.endsWith('.json');
+            const endpoint = isJson ? 'upload-hits-json' : 'upload-hits';
+
+            try {
+                const response = await fetch(`${API_URL}/import/${endpoint}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    log(`✅ ${result.message}`, 'success', hitsLogDiv);
+                    log(`Хитов: ${result.stats.hits}`, 'info', hitsLogDiv);
+                    hitsProgressFill.style.width = '100%';
+                    loadHits(); // Обновляем список хитов
+                } else {
+                    log(`❌ Ошибка: ${result.error}`, 'error', hitsLogDiv);
+                    hitsProgressFill.style.width = '0%';
+                }
+            } catch (error) {
+                log(`❌ Ошибка загрузки: ${error.message}`, 'error', hitsLogDiv);
+                hitsProgressFill.style.width = '0%';
+            } finally {
+                hitsUploadBtn.disabled = false;
+            }
+        }
+
+        async function loadHits() {
+            try {
+                const response = await fetch(`${API_URL}/hits`);
+                const result = await response.json();
+
+                if (result.success) {
+                    currentHits = result.data || [];
+                    renderHitsGrid();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки хитов:', error);
+            }
+        }
+
+        function renderHitsGrid() {
+            const grid = document.getElementById('hitsGrid');
+            if (!grid) return;
+
+            if (currentHits.length === 0) {
+                grid.innerHTML = '<p style="color: #666; text-align: center; grid-column: 1/-1;">Хиты продаж не загружены</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            currentHits.forEach((hit, index) => {
+                const card = document.createElement('div');
+                card.className = 'hit-card';
+                card.innerHTML = `
+                    <div class="hit-card__name">${hit.emoji || '🌿'} ${hit.name}</div>
+                    <div class="hit-card__price">${hit.price.toLocaleString('ru-RU')} ₽</div>
+                    ${hit.latin ? `<div style="font-size: 0.85rem; color: #666; font-style: italic;">${hit.latin}</div>` : ''}
+                    ${hit.condition ? `<div style="font-size: 0.8rem; color: #888; margin-top: 4px;">${hit.condition}</div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function clearHits() {
+            if (confirm('Вы уверены, что хотите удалить все хиты продаж?')) {
+                try {
+                    const response = await fetch(`${API_URL}/hits`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ hits: [] })
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        currentHits = [];
+                        renderHitsGrid();
+                        alert('✅ Хиты удалены');
+                    }
+                } catch (error) {
+                    alert('❌ Ошибка: ' + error.message);
+                }
+            }
+        }
+
+        // Вспомогательная функция для логирования
+        function log(message, type = 'info', container = null) {
+            const logContainer = container || logDiv;
+            if (!logContainer) return;
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            if (type === 'error') entry.classList.add('log-error');
+            if (type === 'success') entry.classList.add('log-success');
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // ========================================
+        // Заказы
+        // ========================================
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/orders`);
+                const result = await response.json();
+
+                if (result.success) {
+                    renderOrders(result.data || []);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки заказов:', error);
+            }
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('ordersBody');
+            if (!tbody) return;
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #666;">Заказов нет</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            orders.forEach(order => {
+                const tr = document.createElement('tr');
+                const statusClass = `order-status--${order.status}`;
+                const statusText = {
+                    'pending': 'Ожидает',
+                    'confirmed': 'Подтверждён',
+                    'paid': 'Оплачен',
+                    'cancelled': 'Отменён'
+                }[order.status] || order.status;
+
+                tr.innerHTML = `
+                    <td>${order.id}</td>
+                    <td>${order.name}<br><small style="color: #666">${order.email}</small></td>
+                    <td>${order.phone}</td>
+                    <td><strong>${order.total.toLocaleString('ru-RU')} ₽</strong></td>
+                    <td>${order.payment === 'yoomoney' ? '💳 ЮKassa' : '💵 При получении'}</td>
+                    <td><span class="order-status ${statusClass}">${statusText}</span></td>
+                    <td>${new Date(order.createdAt).toLocaleDateString('ru-RU')}</td>
+                    <td class="order-actions">
+                        <button class="btn btn-small" onclick="updateOrderStatus(${order.id}, 'confirmed')">✓</button>
+                        <button class="btn btn-small btn-danger" onclick="updateOrderStatus(${order.id}, 'cancelled')">✗</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function updateOrderStatus(orderId, status) {
+            try {
+                const response = await fetch(`${API_URL}/orders/${orderId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('✅ Статус обновлён!');
+                    loadOrders();
+                } else {
+                    alert('❌ Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Ошибка обновления: ' + error.message);
+            }
+        }
     </script>
 </body>
 </html>

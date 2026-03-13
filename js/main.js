@@ -186,8 +186,12 @@ function formatPrice(price) {
 // --- Получение названия категории ---
 
 function getCategoryName(categoryId) {
+    if (!categories || !Array.isArray(categories)) return categoryId;
     const category = categories.find(c => c.id === categoryId);
-    return category ? category.name : categoryId;
+    if (category) return category.name;
+    
+    // Если категория не найдена, возвращаем название из ID
+    return categoryId.charAt(0).toUpperCase() + categoryId.slice(1);
 }
 
 // --- Создание карточки товара ---

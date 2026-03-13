@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1773438979890,
+    "name": "Гинкго двулопастный",
+    "latin": "Ginkgo biloba",
+    "condition": "80-100 C5_26",
+    "price": 5900,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979891,
+    "name": "Ель аянская",
+    "latin": "Picea jezoensis",
+    "condition": "40/+ bag _24",
+    "price": 4500,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979892,
+    "name": "Ель европейская",
+    "latin": "Picea abies",
+    "condition": "150-175 rb Extra _23",
+    "price": 23000,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979893,
+    "name": "Ель европейская",
+    "latin": "Picea abies",
+    "condition": "200-225 rb Extra _23",
+    "price": 27000,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979894,
+    "name": "Ель канадская",
+    "latin": "Picea glauca",
+    "condition": "160-180 rb _23",
+    "price": 10300,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979895,
+    "name": "Ель канадская",
+    "latin": "Picea glauca",
+    "condition": "200-250 rb _23",
+    "price": 15000,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979896,
+    "name": "Ель канадская",
+    "latin": "Picea glauca",
+    "condition": "140-160 rb _о25",
+    "price": 23500,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979897,
+    "name": "Ель канадская",
+    "latin": "Picea glauca",
+    "condition": "160-180 rb_26",
+    "price": 37000,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  },
+  {
+    "id": 1773438979898,
+    "name": "Ель канадская Alberta Globe",
+    "latin": "Picea glauca Alberta Globe",
+    "condition": "25-30 C5_26",
+    "price": 7300,
+    "category": "хвойные",
+    "emoji": "🌲",
+    "popular": true
+  }
+]

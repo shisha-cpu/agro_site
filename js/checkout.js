@@ -10,12 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderForm = document.getElementById('order-form');
     const successModal = document.getElementById('success-modal');
     const modalClose = document.getElementById('modal-close');
+    const yoomoneyForm = document.getElementById('yoomoney-form');
+    const paymentRadios = document.querySelectorAll('input[name="payment"]');
 
     // Проверка: если корзина пуста, перенаправляем в каталог
     if (cart.items.length === 0) {
         window.location.href = 'catalog.html';
         return;
     }
+
+    // Показ/скрытие формы ЮMoney
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (yoomoneyForm) {
+                yoomoneyForm.style.display = radio.value === 'yoomoney' ? 'block' : 'none';
+            }
+        });
+    });
 
     // Рендеринг товаров в сводке заказа
     function renderCheckoutItems() {
@@ -56,37 +67,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Обработка отправки формы
     if (orderForm) {
-        orderForm.addEventListener('submit', (e) => {
+        orderForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Собираем данные формы
-            const formData = new FormData(orderForm);
-            const orderData = {
-                name: formData.get('name'),
-                phone: formData.get('phone'),
-                email: formData.get('email'),
-                address: formData.get('address'),
-                comment: formData.get('comment'),
-                payment: formData.get('payment'),
-                agreement: formData.get('agreement')
-            };
+            const submitBtn = orderForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Оформление...';
 
-            // Добавляем данные о заказе
-            orderData.items = cart.items;
-            orderData.total = cart.getFullTotal();
-            orderData.delivery = cart.getDelivery();
-            orderData.subtotal = cart.getTotal();
-            orderData.date = new Date().toISOString();
+            try {
+                // Собираем данные формы
+                const formData = new FormData(orderForm);
+                const orderData = {
+                    name: formData.get('name'),
+                    phone: formData.get('phone'),
+                    email: formData.get('email'),
+                    address: formData.get('address'),
+                    comment: formData.get('comment'),
+                    payment: formData.get('payment')
+                };
 
-            // Сохраняем заказ (в реальном проекте здесь была бы отправка на сервер)
-            console.log('Заказ оформлен:', orderData);
+                // Добавляем данные о заказе
+                orderData.items = cart.items;
+                orderData.total = cart.getFullTotal();
+                orderData.delivery = cart.getDelivery();
+                orderData.subtotal = cart.getTotal();
 
-            // Очищаем корзину
-            cart.clear();
+                // Отправляем заказ на сервер
+                const response = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
 
-            // Показываем модальное окно успеха
-            if (successModal) {
-                successModal.classList.add('active');
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Ошибка оформления заказа');
+                }
+
+                // Очищаем корзину
+                cart.clear();
+
+                // Если есть URL для оплаты - перенаправляем
+                if (result.confirmationUrl) {
+                    // Сохраняем ID заказа для возврата
+                    sessionStorage.setItem('orderId', result.orderId);
+                    window.location.href = result.confirmationUrl;
+                    return;
+                }
+
+                // Показываем модальное окно успеха
+                if (successModal) {
+                    successModal.classList.add('active');
+                    
+                    // Обновляем текст для тестового режима
+                    if (result.testMode) {
+                        const successText = successModal.querySelector('.success-message__text');
+                        if (successText) {
+                            successText.textContent = 'Спасибо за заказ! Наш менеджер свяжется с вами в ближайшее время. (Тестовый режим - оплата не требуется)';
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error('Ошибка оформления заказа:', error);
+                alert('Ошибка оформления заказа: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
         });
     }
@@ -102,6 +152,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Проверка возврата после оплаты
+    checkPaymentReturn();
+
     // Первоначальный рендеринг
     renderCheckoutItems();
+
+    // Проверка статуса платежа после возврата
+    async function checkPaymentReturn() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order') || sessionStorage.getItem('orderId');
+        
+        if (orderId) {
+            try {
+                const response = await fetch(`/api/payment-status/${orderId}`);
+                const result = await response.json();
+                
+                if (result.success && result.status === 'paid') {
+                    // Показываем успешное сообщение
+                    if (successModal) {
+                        successModal.classList.add('active');
+                        const title = successModal.querySelector('.success-message__title');
+                        const text = successModal.querySelector('.success-message__text');
+                        if (title) title.textContent = 'Оплата прошла успешно!';
+                        if (text) text.textContent = 'Ваш заказ оплачен. Менеджер свяжется с вами для уточнения деталей доставки.';
+                    }
+                    sessionStorage.removeItem('orderId');
+                }
+            } catch (error) {
+                console.error('Ошибка проверки платежа:', error);
+            }
+        }
+    }
 });

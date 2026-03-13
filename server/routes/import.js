@@ -4,8 +4,6 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
-const Product = require('../models/Product');
-const Category = require('../models/Category');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -27,7 +25,7 @@ const upload = multer({
 // Маппинг названий листов для XLSX
 const CATEGORY_MAPPING = {
   'хвойные': { id: 'хвойные', name: 'Хвойные', emoji: '🌲' },
-  'лиственные': { id: 'лиственные', name: 'Лиственные', emoji: '🍃' },
+  'лиственные': { id: 'лиственные', name: 'Лиственные декоративные', emoji: '🍃' },
   'розы': { id: 'цветы', name: 'Цветы', emoji: '🌺' },
   'рододендроны': { id: 'рододендроны', name: 'Рододендроны', emoji: '🌸' },
   'плодовые': { id: 'плодовые', name: 'Плодовые', emoji: '🍎' },
@@ -35,41 +33,42 @@ const CATEGORY_MAPPING = {
   'многолетники': { id: 'многолетники', name: 'Многолетники', emoji: '🌸' },
   'сопутка': { id: 'иммуностимуляторы', name: 'Сопутствующие товары', emoji: '💊' },
   'Хвойные': { id: 'хвойные', name: 'Хвойные', emoji: '🌲' },
-  'Лиственные': { id: 'лиственные', name: 'Лиственные', emoji: '🍃' },
+  'Лиственные': { id: 'лиственные', name: 'Лиственные декоративные', emoji: '🍃' },
   'Розы': { id: 'цветы', name: 'Цветы', emoji: '🌺' },
   'Рододендроны': { id: 'рододендроны', name: 'Рододендроны', emoji: '🌸' },
   'Плодовые': { id: 'плодовые', name: 'Плодовые', emoji: '🍎' },
   'Лианы': { id: 'лианы', name: 'Лианы', emoji: '🌿' },
   'Многолетники': { id: 'многолетники', name: 'Многолетники', emoji: '🌸' },
-  'Сопутка': { id: 'иммуностимуляторы', name: 'Сопутствующие товары', emoji: '💊' }
+  'Сопутка': { id: 'иммуностимуляторы', name: 'Сопутствующие товары', emoji: '💊' },
+  'Тропические': { id: 'тропические', name: 'Тропические растения', emoji: '🌴' },
+  'тропические': { id: 'тропические', name: 'Тропические растения', emoji: '🌴' }
 };
 
 // Загрузка JSON файла (data.json)
-router.post('/upload-json', upload.single('file'), async (req, res) => {
+router.post('/upload-json', upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'Файл не загружен' });
     }
 
-    const data = JSON.parse(req.file.buffer.toString('utf-8'));
-    
-    if (!data.products || !Array.isArray(data.products)) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Неверный формат JSON. Ожидалась структура с массивом products' 
+    const uploadedData = JSON.parse(req.file.buffer.toString('utf-8'));
+
+    if (!uploadedData.products || !Array.isArray(uploadedData.products)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Неверный формат JSON. Ожидалась структура с массивом products'
       });
     }
 
-    // Очищаем старые данные
-    await Product.deleteMany({});
-    await Category.deleteMany({});
-
+    const data = req.loadData();
+    
+    // Сохраняем продукты из загруженного файла
+    data.products = uploadedData.products;
+    
+    // Собираем категории из продуктов
     const categoriesMap = new Map();
-
-    // Обрабатываем продукты и собираем категории
     for (const product of data.products) {
       const categoryId = product.category || 'другое';
-      
       if (!categoriesMap.has(categoryId)) {
         const categoryInfo = CATEGORY_MAPPING[categoryId] || {
           id: categoryId,
@@ -78,29 +77,24 @@ router.post('/upload-json', upload.single('file'), async (req, res) => {
         };
         categoriesMap.set(categoryId, { ...categoryInfo, count: 0 });
       }
-      
       categoriesMap.get(categoryId).count++;
     }
+    
+    data.categories = Array.from(categoriesMap.values());
 
-    // Сохраняем продукты
-    if (data.products.length > 0) {
-      await Product.insertMany(data.products);
+    if (req.saveData(data)) {
+      res.json({
+        success: true,
+        message: 'JSON файл успешно загружен',
+        stats: {
+          products: data.products.length,
+          categories: data.categories.length,
+          importDate: new Date().toISOString()
+        }
+      });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения данных' });
     }
-
-    // Сохраняем категории
-    if (categoriesMap.size > 0) {
-      await Category.insertMany(Array.from(categoriesMap.values()));
-    }
-
-    res.json({
-      success: true,
-      message: 'JSON файл успешно загружен',
-      stats: {
-        products: data.products.length,
-        categories: categoriesMap.size,
-        importDate: new Date().toISOString()
-      }
-    });
 
   } catch (error) {
     console.error('Ошибка обработки JSON файла:', error);
@@ -109,7 +103,7 @@ router.post('/upload-json', upload.single('file'), async (req, res) => {
 });
 
 // Загрузка XLSX файла
-router.post('/upload-xlsx', upload.single('file'), async (req, res) => {
+router.post('/upload-xlsx', upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'Файл не загружен' });
@@ -146,6 +140,7 @@ router.post('/upload-xlsx', upload.single('file'), async (req, res) => {
         if (!row || row.length === 0) continue;
 
         const product = {
+          id: Date.now() + i,
           name: row[0] || 'Без названия',
           latin: row[1] || '',
           condition: row[2] || '',
@@ -162,28 +157,23 @@ router.post('/upload-xlsx', upload.single('file'), async (req, res) => {
       }
     }
 
-    // Очищаем старые данные
-    await Product.deleteMany({});
-    await Category.deleteMany({});
+    const data = req.loadData();
+    data.products = allProducts;
+    data.categories = Array.from(categoriesMap.values());
 
-    // Сохраняем новые данные
-    if (allProducts.length > 0) {
-      await Product.insertMany(allProducts);
+    if (req.saveData(data)) {
+      res.json({
+        success: true,
+        message: 'XLSX файл успешно загружен',
+        stats: {
+          products: data.products.length,
+          categories: data.categories.length,
+          importDate: new Date().toISOString()
+        }
+      });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения данных' });
     }
-
-    if (categoriesMap.size > 0) {
-      await Category.insertMany(Array.from(categoriesMap.values()));
-    }
-
-    res.json({
-      success: true,
-      message: 'XLSX файл успешно загружен',
-      stats: {
-        products: allProducts.length,
-        categories: categoriesMap.size,
-        importDate: new Date().toISOString()
-      }
-    });
 
   } catch (error) {
     console.error('Ошибка обработки XLSX файла:', error);
@@ -192,36 +182,30 @@ router.post('/upload-xlsx', upload.single('file'), async (req, res) => {
 });
 
 // Импорт из локального файла data.json (для первоначальной загрузки)
-router.post('/import-local', async (req, res) => {
+router.post('/import-local', (req, res) => {
   try {
     const dataPath = path.join(__dirname, '..', '..', 'data.json');
-    
+
     if (!fs.existsSync(dataPath)) {
-      return res.status(404).json({ 
-        success: false, 
-        error: 'Файл data.json не найден' 
+      return res.status(404).json({
+        success: false,
+        error: 'Файл data.json не найден'
       });
     }
 
     const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-    
+
     if (!data.products || !Array.isArray(data.products)) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Неверный формат JSON в data.json' 
+      return res.status(400).json({
+        success: false,
+        error: 'Неверный формат JSON в data.json'
       });
     }
 
-    // Очищаем старые данные
-    await Product.deleteMany({});
-    await Category.deleteMany({});
-
+    // Собираем категории из продуктов
     const categoriesMap = new Map();
-
-    // Обрабатываем продукты и собираем категории
     for (const product of data.products) {
       const categoryId = product.category || 'другое';
-      
       if (!categoriesMap.has(categoryId)) {
         const categoryInfo = CATEGORY_MAPPING[categoryId] || {
           id: categoryId,
@@ -230,29 +214,24 @@ router.post('/import-local', async (req, res) => {
         };
         categoriesMap.set(categoryId, { ...categoryInfo, count: 0 });
       }
-      
       categoriesMap.get(categoryId).count++;
     }
+    
+    data.categories = Array.from(categoriesMap.values());
 
-    // Сохраняем продукты
-    if (data.products.length > 0) {
-      await Product.insertMany(data.products);
+    if (req.saveData(data)) {
+      res.json({
+        success: true,
+        message: 'Данные из data.json успешно обновлены',
+        stats: {
+          products: data.products.length,
+          categories: data.categories.length,
+          importDate: new Date().toISOString()
+        }
+      });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения данных' });
     }
-
-    // Сохраняем категории
-    if (categoriesMap.size > 0) {
-      await Category.insertMany(Array.from(categoriesMap.values()));
-    }
-
-    res.json({
-      success: true,
-      message: 'Данные из data.json успешно импортированы в MongoDB',
-      stats: {
-        products: data.products.length,
-        categories: categoriesMap.size,
-        importDate: new Date().toISOString()
-      }
-    });
 
   } catch (error) {
     console.error('Ошибка импорта из data.json:', error);
@@ -261,12 +240,120 @@ router.post('/import-local', async (req, res) => {
 });
 
 // Удалить все данные
-router.delete('/data', async (req, res) => {
+router.delete('/data', (req, res) => {
   try {
-    await Product.deleteMany({});
-    await Category.deleteMany({});
-    res.json({ success: true, message: 'Данные удалены' });
+    const data = req.loadData();
+    data.products = [];
+    data.categories = [];
+    if (req.saveData(data)) {
+      res.json({ success: true, message: 'Данные удалены' });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения' });
+    }
   } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Загрузка XLSX файла с хитами продаж
+router.post('/upload-hits', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Файл не загружен' });
+    }
+
+    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+    const allHits = [];
+
+    // Берём первый лист или лист с названием "Хиты"
+    const sheetName = workbook.SheetNames.find(name => 
+      name.toLowerCase().includes('хит') || name.toLowerCase().includes('hit')
+    ) || workbook.SheetNames[0];
+
+    if (!sheetName) {
+      return res.status(400).json({ success: false, error: 'Файл не содержит листов' });
+    }
+
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    if (jsonData.length < 2) {
+      return res.status(400).json({ success: false, error: 'Файл пуст' });
+    }
+
+    // Парсим строки (формат: Название, Латинское, Кондиция, Цена, Категория)
+    for (let i = 1; i < jsonData.length && allHits.length < 9; i++) {
+      const row = jsonData[i];
+      if (!row || row.length === 0) continue;
+
+      const hit = {
+        id: Date.now() + i,
+        name: row[0] || 'Без названия',
+        latin: row[1] || '',
+        condition: row[2] || '',
+        price: parseFloat(row[3]) || 0,
+        category: row[4] || 'хвойные',
+        emoji: '🌲',
+        popular: true
+      };
+
+      if (hit.name && hit.price > 0) {
+        allHits.push(hit);
+      }
+    }
+
+    // Сохраняем в hits.json
+    const hitsPath = path.join(__dirname, '..', '..', 'hits.json');
+    fs.writeFileSync(hitsPath, JSON.stringify(allHits, null, 2), 'utf-8');
+
+    res.json({
+      success: true,
+      message: 'Хиты продаж успешно загружены',
+      stats: {
+        hits: allHits.length,
+        importDate: new Date().toISOString()
+      }
+    });
+
+  } catch (error) {
+    console.error('Ошибка загрузки хитов:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Загрузка JSON файла с хитами
+router.post('/upload-hits-json', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Файл не загружен' });
+    }
+
+    const uploadedData = JSON.parse(req.file.buffer.toString('utf-8'));
+    const hitsArray = Array.isArray(uploadedData) ? uploadedData : (uploadedData.hits || []);
+
+    if (!Array.isArray(hitsArray) || hitsArray.length === 0) {
+      return res.status(400).json({ success: false, error: 'Неверный формат JSON' });
+    }
+
+    if (hitsArray.length > 9) {
+      return res.status(400).json({ success: false, error: 'Максимум 9 хитов продаж' });
+    }
+
+    // Сохраняем в hits.json
+    const hitsPath = path.join(__dirname, '..', '..', 'hits.json');
+    fs.writeFileSync(hitsPath, JSON.stringify(hitsArray, null, 2), 'utf-8');
+
+    res.json({
+      success: true,
+      message: 'Хиты продаж успешно загружены',
+      stats: {
+        hits: hitsArray.length,
+        importDate: new Date().toISOString()
+      }
+    });
+
+  } catch (error) {
+    console.error('Ошибка загрузки хитов:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

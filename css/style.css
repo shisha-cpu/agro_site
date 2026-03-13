@@ -514,7 +514,8 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--gradient-primary);
+    background: linear-gradient(rgba(26, 95, 58, 0.85), rgba(15, 61, 36, 0.9)),
+                url('https://images.pexels.com/photos/1001584/pexels-photo-1001584.jpeg?w=1920') center/cover no-repeat;
     overflow: hidden;
 }
 
@@ -555,7 +556,7 @@ p {
 }
 
 .hero__title {
-    font-family: var(--font-heading);
+    font-family: #fff;
     font-size: clamp(2.5rem, 6vw, 5rem);
     font-weight: 700;
     margin-bottom: 16px;
@@ -960,6 +961,30 @@ p {
     color: white;
     position: relative;
     overflow: hidden;
+}
+
+/* Фоновое изображение для страницы контактов */
+.page-header--contacts {
+    background: linear-gradient(rgba(26, 95, 58, 0.75), rgba(15, 61, 36, 0.85)),
+                url('https://images.pexels.com/photos/1695164/pexels-photo-1695164.jpeg?w=1920') center/cover no-repeat;
+}
+
+/* Фоновое изображение для каталога */
+.page-header--catalog {
+    background: linear-gradient(rgba(26, 95, 58, 0.8), rgba(15, 61, 36, 0.9)),
+                url('https://images.pexels.com/photos/1029580/pexels-photo-1029580.jpeg?w=1920') center/cover no-repeat;
+}
+
+/* Фоновое изображение для корзины */
+.page-header--cart {
+    background: linear-gradient(rgba(26, 95, 58, 0.8), rgba(15, 61, 36, 0.9)),
+                url('https://images.pexels.com/photos/1443961/pexels-photo-1443961.jpeg?w=1920') center/cover no-repeat;
+}
+
+/* Фоновое изображение для оформления заказа */
+.page-header--checkout {
+    background: linear-gradient(rgba(26, 95, 58, 0.8), rgba(15, 61, 36, 0.9)),
+                url('https://images.pexels.com/photos/1614704/pexels-photo-1614704.jpeg?w=1920') center/cover no-repeat;
 }
 
 .page-header::before {
@@ -1689,6 +1714,30 @@ p {
 .contacts-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
+}
+
+/* Акцентная карточка (предварительная запись) */
+.contacts-card--accent {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+}
+
+.contacts-card--accent .contacts-card__title {
+    color: white;
+}
+
+.contacts-card--accent .contacts-card__text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.contacts-card--accent .contacts-card__desc {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.contacts-card--accent .contacts-card__icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
 }
 
 .contacts-card__icon {
