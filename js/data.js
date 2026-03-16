@@ -3,7 +3,7 @@
 // Загружаются с сервера (Express + MongoDB) или из data.json (моковые данные)
 // ========================================
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://greenmagics.ru/api';
 
 // Глобальные переменные
 let products = [];

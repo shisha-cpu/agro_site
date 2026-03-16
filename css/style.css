@@ -514,9 +514,13 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(rgba(26, 95, 58, 0.85), rgba(15, 61, 36, 0.9)),
-                url('https://images.pexels.com/photos/1001584/pexels-photo-1001584.jpeg?w=1920') center/cover no-repeat;
     overflow: hidden;
+}
+
+/* Фон только для главной страницы */
+.hero--main {
+    background: linear-gradient(rgba(26, 95, 58, 0.85), rgba(15, 61, 36, 0.9)),
+                url('../img/mainbgbanner.jpg') center/cover no-repeat;
 }
 
 .hero::before {
@@ -556,7 +560,8 @@ p {
 }
 
 .hero__title {
-    font-family: #fff;
+
+    color: #fff;
     font-size: clamp(2.5rem, 6vw, 5rem);
     font-weight: 700;
     margin-bottom: 16px;

@@ -20,7 +20,7 @@ const YOOKASSA_SECRET_KEY = process.env.YOOKASSA_SECRET_KEY || 'your_secret_key'
 const YOOKASSA_TEST_MODE = process.env.YOOKASSA_TEST_MODE === 'true';
 
 // URL для уведомлений (замените на свой домен)
-const RETURN_URL = process.env.RETURN_URL || 'http://localhost:3000/checkout.html';
+const RETURN_URL = process.env.RETURN_URL || 'https://greenmagics.ru/checkout.html';
 
 // Middleware
 app.use(cors());
