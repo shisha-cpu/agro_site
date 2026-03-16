@@ -96,31 +96,35 @@
                 </div>
             </div>
 
-            <!-- Форма обратной связи -->
-            <div class="contact-form-section">
-                <h2 class="section-title">Напишите нам</h2>
-                <p class="section-subtitle">Заполните форму и мы ответим вам в ближайшее время</p>
-                <form class="contact-form" id="contact-form">
-                    <div class="contact-form__grid">
-                        <div class="form-group">
-                            <label for="contact-name" class="form-label">Ваше имя</label>
-                            <input type="text" id="contact-name" name="name" class="form-input" required placeholder="Иван">
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-phone" class="form-label">Телефон</label>
-                            <input type="tel" id="contact-phone" name="phone" class="form-input" required placeholder="+7 (999) 000-00-00">
-                        </div>
+            <!-- Информация о доставке -->
+            <div class="delivery-short">
+                <h2 class="section-title">Доставка</h2>
+                <div class="delivery-short__grid">
+                    <div class="delivery-short__item">
+                        <div class="delivery-short__icon">📮</div>
+                        <h4>Почта России</h4>
+                        <p>Доставка по всей России от 3 до 14 дней</p>
                     </div>
-                    <div class="form-group">
-                        <label for="contact-email" class="form-label">Email</label>
-                        <input type="email" id="contact-email" name="email" class="form-input" required placeholder="example@mail.ru">
+                    <div class="delivery-short__item">
+                        <div class="delivery-short__icon">🚚</div>
+                        <h4>СДЭК</h4>
+                        <p>Быстрая доставка от 2 до 7 дней до пункта выдачи или курьером</p>
                     </div>
-                    <div class="form-group">
-                        <label for="contact-message" class="form-label">Сообщение</label>
-                        <textarea id="contact-message" name="message" class="form-input form-input--textarea" required placeholder="Ваш вопрос или пожелание..." rows="5"></textarea>
+                    <div class="delivery-short__item">
+                        <div class="delivery-short__icon">🚛</div>
+                        <h4>Желдорэкспедиция</h4>
+                        <p>Выгодная доставка крупных заказов от 5 до 15 дней</p>
                     </div>
-                    <button type="submit" class="btn btn--large btn--primary btn--block">Отправить сообщение</button>
-                </form>
+                    <div class="delivery-short__item">
+                        <div class="delivery-short__icon">🏡</div>
+                        <h4>Самовывоз</h4>
+                        <p>Бесплатно из питомника по предварительной записи</p>
+                    </div>
+                </div>
+                <p class="delivery-short__note">
+                    После оформления заказа менеджер свяжется с вами для уточнения деталей доставки.
+                    Все растения надёжно упаковываются и отправляются с закрытой корневой системой.
+                </p>
             </div>
 
             <!-- Информация о питомнике -->
@@ -167,7 +171,9 @@
                 <h4 class="footer__title">Навигация</h4>
                 <a href="index.html" class="footer__link">Главная</a>
                 <a href="catalog.html" class="footer__link">Каталог</a>
+                <a href="cart.html" class="footer__link">Корзина</a>
                 <a href="contacts.html" class="footer__link">Контакты</a>
+                <a href="offer.html" class="footer__link">Оферта</a>
             </div>
             <div class="footer__col">
                 <h4 class="footer__title">Контакты</h4>
