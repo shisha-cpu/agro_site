@@ -519,9 +519,9 @@ p {
 
 /* Фон только для главной страницы */
 .hero--main {
-    background: linear-gradient(rgba(26, 95, 58, 0.85), rgba(15, 61, 36, 0.9)),
-                url('../img/mainbgbanner.jpg') center/cover no-repeat;
+    background:url('../img/mainbgbanner.jpg') center/cover no-repeat;
 }
+
 
 .hero::before {
     content: '';
