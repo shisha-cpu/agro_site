@@ -117,6 +117,11 @@
         .hit-image-item img { width: 100%; height: 80px; object-fit: cover; display: block; }
         .hit-image-remove { position: absolute; top: 2px; right: 2px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.8rem; }
         
+        /* Модальное окно удаления категории */
+        #deleteCategoryModal .modal-content { max-width: 500px; }
+        #deleteCategoryOptions label:hover { background: #f0f7f4; }
+        #deleteCategoryOptions input[type="radio"] { width: auto; }
+        
         /* Заказы */
         .orders-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 16px; }
         .orders-table th, .orders-table td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
@@ -515,6 +520,38 @@
                     <button type="button" class="btn btn-secondary" onclick="closeHitModal()">Отмена</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Подтверждение удаления категории -->
+    <div class="modal" id="deleteCategoryModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="deleteCategoryModalTitle">Удаление категории</h2>
+            <div style="margin: 20px 0;">
+                <p id="deleteCategoryMessage" style="margin-bottom: 16px; color: #555;"></p>
+                <div id="deleteCategoryOptions">
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 2px solid #4a7c59; border-radius: 8px; cursor: pointer; background: #f0f7f4;">
+                            <input type="radio" name="deleteAction" value="delete" checked onchange="toggleTargetCategorySelect(false)">
+                            <span>🗑️ Удалить товары вместе с категорией</span>
+                        </label>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                            <input type="radio" name="deleteAction" value="move" onchange="toggleTargetCategorySelect(true)">
+                            <span>📦 Перенести товары в другую категорию</span>
+                        </label>
+                    </div>
+                    <div id="targetCategorySelect" style="display: none; margin-top: 12px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                        <label for="targetCategory" style="display: block; margin-bottom: 8px; font-weight: 500;">Выберите категорию:</label>
+                        <select id="targetCategory" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteCategoryModal()">Отмена</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteCategory()">Удалить</button>
+            </div>
         </div>
     </div>
 
@@ -1523,22 +1560,95 @@
             }
         });
 
-        async function deleteCategory(categoryId) {
-            if (!confirm('Вы уверены, что хотите удалить эту категорию?')) return;
+        let categoryToDelete = null;
 
+        async function deleteCategory(categoryId) {
+            const category = allCategories.find(c => c.id === categoryId);
+            if (!category) return;
+            
+            // Получаем товары этой категории
+            const productsInCategory = allProducts.filter(p => p.category === categoryId);
+            
+            categoryToDelete = categoryId;
+            
+            // Показываем модальное окно с подтверждением
+            document.getElementById('deleteCategoryModalTitle').textContent = `Удаление категории "${category.name}"`;
+            
+            const messageEl = document.getElementById('deleteCategoryMessage');
+            if (productsInCategory.length > 0) {
+                messageEl.innerHTML = `В категории "<strong>${category.name}</strong>" находится <strong>${productsInCategory.length} товар(а)</strong>.<br>Выберите действие:`;
+                document.getElementById('deleteCategoryOptions').style.display = 'block';
+            } else {
+                messageEl.innerHTML = `Вы уверены, что хотите удалить категорию "<strong>${category.name}</strong>"?`;
+                document.getElementById('deleteCategoryOptions').style.display = 'none';
+            }
+            
+            // Заполняем селект категориями для переноса
+            const targetSelect = document.getElementById('targetCategory');
+            targetSelect.innerHTML = '';
+            allCategories.forEach(cat => {
+                if (cat.id !== categoryId) {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = `${cat.emoji} ${cat.name}`;
+                    targetSelect.appendChild(option);
+                }
+            });
+            
+            document.getElementById('deleteCategoryModal').classList.add('active');
+        }
+
+        function toggleTargetCategorySelect(show) {
+            document.getElementById('targetCategorySelect').style.display = show ? 'block' : 'none';
+        }
+
+        function closeDeleteCategoryModal() {
+            document.getElementById('deleteCategoryModal').classList.remove('active');
+            categoryToDelete = null;
+        }
+
+        async function confirmDeleteCategory() {
+            if (!categoryToDelete) return;
+            
+            const actionRadios = document.getElementsByName('deleteAction');
+            let selectedAction = 'delete';
+            for (const radio of actionRadios) {
+                if (radio.checked) {
+                    selectedAction = radio.value;
+                    break;
+                }
+            }
+            
+            const requestBody = { action: selectedAction };
+            if (selectedAction === 'move') {
+                requestBody.targetCategory = document.getElementById('targetCategory').value;
+            }
+            
             try {
-                const response = await fetch(`${API_URL}/categories/${categoryId}`, {
-                    method: 'DELETE'
+                const response = await fetch(`${API_URL}/categories/${categoryToDelete}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    alert('✅ Категория удалена');
-                    if (selectedCategoryId === categoryId) {
+                    let message = '✅ Категория удалена';
+                    if (result.deletedProducts > 0) {
+                        if (selectedAction === 'delete') {
+                            message += ` (удалено ${result.deletedProducts} товаров)`;
+                        } else {
+                            message += ` (перенесено ${result.deletedProducts} товаров)`;
+                        }
+                    }
+                    alert(message);
+                    
+                    if (selectedCategoryId === categoryToDelete) {
                         selectedCategoryId = null;
                         document.getElementById('noCategorySelected').style.display = 'block';
                         document.getElementById('productsPanel').style.display = 'none';
                     }
+                    closeDeleteCategoryModal();
                     loadCategoriesManage();
                 } else {
                     alert('❌ Ошибка: ' + result.error);

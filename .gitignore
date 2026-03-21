@@ -2,3 +2,7 @@ node_modules/
 npm-debug.log
 .env
 .DS_Store
+data.json
+hits.json
+orders.json
+logs/

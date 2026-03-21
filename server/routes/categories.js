@@ -163,15 +163,7 @@ router.delete('/:id', (req, res) => {
   try {
     const data = req.loadData();
     const categoryId = req.params.id;
-
-    // Проверяем, есть ли товары в этой категории
-    const productsInCategory = (data.products || []).filter(p => p.category === categoryId);
-    if (productsInCategory.length > 0) {
-      return res.status(400).json({ 
-        success: false, 
-        error: `Нельзя удалить категорию, в которой есть товары (${productsInCategory.length} шт.)` 
-      });
-    }
+    const { action = 'delete' } = req.body; // 'delete' - удалить товары, 'move' - перенести
 
     const categories = data.categories || [];
     const index = categories.findIndex(cat => cat.id === categoryId);
@@ -180,11 +172,52 @@ router.delete('/:id', (req, res) => {
       return res.status(404).json({ success: false, error: 'Категория не найдена' });
     }
 
+    // Проверяем, есть ли товары в этой категории
+    let productsInCategory = (data.products || []).filter(p => p.category === categoryId);
+    
+    if (productsInCategory.length > 0) {
+      if (action === 'delete') {
+        // Удаляем все товары этой категории
+        data.products = (data.products || []).filter(p => p.category !== categoryId);
+      } else if (action === 'move') {
+        // Переносим товары в другую категорию
+        const { targetCategory } = req.body;
+        if (!targetCategory) {
+          return res.status(400).json({
+            success: false,
+            error: 'Необходимо указать целевую категорию для переноса товаров'
+          });
+        }
+        // Проверяем, существует ли целевая категория
+        const targetExists = categories.some(cat => cat.id === targetCategory);
+        if (!targetExists) {
+          return res.status(400).json({
+            success: false,
+            error: 'Целевая категория не найдена'
+          });
+        }
+        // Переносим товары
+        data.products = (data.products || []).map(p => {
+          if (p.category === categoryId) {
+            return { ...p, category: targetCategory };
+          }
+          return p;
+        });
+      }
+      // Если action !== 'delete' и action !== 'move', товары остаются без категории (будут в "другое")
+    }
+
+    // Удаляем категорию
     categories.splice(index, 1);
     data.categories = categories;
 
     if (req.saveData(data)) {
-      res.json({ success: true, message: 'Категория удалена' });
+      res.json({ 
+        success: true, 
+        message: 'Категория удалена',
+        deletedProducts: productsInCategory.length,
+        action: action
+      });
     } else {
       res.status(500).json({ success: false, error: 'Ошибка сохранения категории' });
     }
