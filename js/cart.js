@@ -41,8 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
         items.forEach(item => {
             const cartItem = document.createElement('div');
             cartItem.className = 'cart-item';
+            
+            // Получаем изображение товара или используем эмодзи
+            const mainImage = item.images && item.images.length > 0 ? item.images[0] : null;
+            const imageHtml = mainImage 
+                ? `<img src="${mainImage}" alt="${item.name}" class="cart-item__image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">`
+                : `<div class="cart-item__image" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: #f0f7f4; border-radius: 8px; font-size: 2.5rem;">${item.emoji || '🌿'}</div>`;
+            
             cartItem.innerHTML = `
-                <div class="cart-item__image">${item.emoji}</div>
+                ${imageHtml}
                 <div class="cart-item__info">
                     <h3 class="cart-item__title">${item.name}</h3>
                     <div class="cart-item__price">${formatPrice(item.price)}</div>

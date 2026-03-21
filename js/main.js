@@ -202,9 +202,16 @@ function createProductCard(product) {
     if (product.popular) card.classList.add('product-card--popular');
 
     const badge = product.popular ? '<span class="product-card__badge">🔥 Популярное</span>' : '';
+    
+    // Получаем первое изображение или используем заглушку
+    const mainImage = product.images && product.images.length > 0 ? product.images[0] : null;
+    const imageHtml = mainImage 
+        ? `<div class="product-card__image-wrapper"><img src="${mainImage}" alt="${product.name}" class="product-card__image"></div>`
+        : `<div class="product-card__image-wrapper" style="display: flex; align-items: center; justify-content: center; background: #f0f7f4;"><span style="font-size: 4rem; color: #4a7c59;">${product.emoji || '🌿'}</span></div>`;
 
     card.innerHTML = `
         ${badge}
+        ${imageHtml}
         <div class="product-card__content">
             <div class="product-card__category">${getCategoryName(product.category)}</div>
             <h3 class="product-card__title">${product.name}</h3>

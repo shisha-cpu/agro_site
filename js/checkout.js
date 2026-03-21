@@ -37,8 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
         cart.items.forEach(item => {
             const checkoutItem = document.createElement('div');
             checkoutItem.className = 'checkout-item';
+            
+            // Получаем изображение товара или используем эмодзи
+            const mainImage = item.images && item.images.length > 0 ? item.images[0] : null;
+            const imageHtml = mainImage 
+                ? `<img src="${mainImage}" alt="${item.name}" class="checkout-item__image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">`
+                : `<div class="checkout-item__image" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: #f0f7f4; border-radius: 8px; font-size: 2.5rem;">${item.emoji || '🌿'}</div>`;
+            
             checkoutItem.innerHTML = `
-                <div class="checkout-item__image">${item.emoji}</div>
+                ${imageHtml}
                 <div class="checkout-item__info">
                     <div class="checkout-item__title">${item.name}</div>
                     <div class="checkout-item__quantity">× ${item.quantity} шт.</div>

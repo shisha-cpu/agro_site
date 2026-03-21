@@ -358,4 +358,162 @@ router.post('/upload-hits-json', upload.single('file'), (req, res) => {
   }
 });
 
+// Загрузка XLSX файла в отдельную категорию
+router.post('/upload-category-xlsx/:categoryId', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Файл не загружен' });
+    }
+
+    const categoryId = req.params.categoryId;
+    const data = req.loadData();
+    
+    // Получаем информацию о категории
+    const category = data.categories?.find(c => c.id === categoryId) || 
+                     CATEGORY_MAPPING[categoryId] || {
+                       id: categoryId,
+                       name: categoryId.charAt(0).toUpperCase() + categoryId.slice(1),
+                       emoji: '🌿'
+                     };
+
+    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+    const newProducts = [];
+    
+    // Берём первый лист
+    const sheetName = workbook.SheetNames[0];
+    if (!sheetName) {
+      return res.status(400).json({ success: false, error: 'Файл не содержит листов' });
+    }
+
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    if (jsonData.length < 2) {
+      return res.status(400).json({ success: false, error: 'Файл пуст' });
+    }
+
+    // Парсим строки (формат: Название, Латинское, Кондиция, Цена)
+    for (let i = 1; i < jsonData.length; i++) {
+      const row = jsonData[i];
+      if (!row || row.length === 0) continue;
+
+      const product = {
+        id: Date.now() + i,
+        name: row[0] || 'Без названия',
+        latin: row[1] || '',
+        condition: row[2] || '',
+        price: parseFloat(row[3]) || 0,
+        category: categoryId,
+        emoji: category.emoji,
+        popular: i <= 5
+      };
+
+      if (product.name && product.price > 0) {
+        newProducts.push(product);
+      }
+    }
+
+    // Добавляем товары в существующие
+    const existingProducts = data.products || [];
+    data.products = [...existingProducts, ...newProducts];
+    
+    // Обновляем количество товаров в категории
+    if (!data.categories) data.categories = [];
+    const catIndex = data.categories.findIndex(c => c.id === categoryId);
+    if (catIndex !== -1) {
+      data.categories[catIndex].count = (data.categories[catIndex].count || 0) + newProducts.length;
+    } else {
+      data.categories.push({
+        ...category,
+        count: newProducts.length
+      });
+    }
+
+    if (req.saveData(data)) {
+      res.json({
+        success: true,
+        message: `Загружено ${newProducts.length} товаров в категорию "${category.name}"`,
+        stats: {
+          products: newProducts.length,
+          totalProducts: data.products.length
+        }
+      });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения данных' });
+    }
+
+  } catch (error) {
+    console.error('Ошибка загрузки XLSX в категорию:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Загрузка JSON файла с товарами в отдельную категорию
+router.post('/upload-category-json/:categoryId', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Файл не загружен' });
+    }
+
+    const categoryId = req.params.categoryId;
+    const data = req.loadData();
+    
+    // Получаем информацию о категории
+    const category = data.categories?.find(c => c.id === categoryId) || 
+                     CATEGORY_MAPPING[categoryId] || {
+                       id: categoryId,
+                       name: categoryId.charAt(0).toUpperCase() + categoryId.slice(1),
+                       emoji: '🌿'
+                     };
+
+    const uploadedData = JSON.parse(req.file.buffer.toString('utf-8'));
+    const productsArray = Array.isArray(uploadedData) ? uploadedData : (uploadedData.products || []);
+
+    if (!Array.isArray(productsArray) || productsArray.length === 0) {
+      return res.status(400).json({ success: false, error: 'Неверный формат JSON' });
+    }
+
+    // Обновляем категорию у всех товаров
+    const newProducts = productsArray.map((p, i) => ({
+      ...p,
+      id: p.id || Date.now() + i,
+      category: categoryId,
+      emoji: p.emoji || category.emoji
+    }));
+
+    // Добавляем товары в существующие
+    const existingProducts = data.products || [];
+    data.products = [...existingProducts, ...newProducts];
+    
+    // Обновляем количество товаров в категории
+    if (!data.categories) data.categories = [];
+    const catIndex = data.categories.findIndex(c => c.id === categoryId);
+    if (catIndex !== -1) {
+      data.categories[catIndex].count = (data.categories[catIndex].count || 0) + newProducts.length;
+    } else {
+      data.categories.push({
+        ...category,
+        count: newProducts.length
+      });
+    }
+
+    if (req.saveData(data)) {
+      res.json({
+        success: true,
+        message: `Загружено ${newProducts.length} товаров в категорию "${category.name}"`,
+        stats: {
+          products: newProducts.length,
+          totalProducts: data.products.length
+        }
+      });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения данных' });
+    }
+
+  } catch (error) {
+    console.error('Ошибка загрузки JSON в категорию:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;

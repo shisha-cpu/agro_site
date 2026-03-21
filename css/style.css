@@ -719,6 +719,32 @@ p {
     z-index: 1;
 }
 
+.product-card__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #f8f9fa;
+}
+
+.product-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.product-card__image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-card__image-wrapper img {
+    transform: scale(1.05);
+}
+
 .product-card__content {
     padding: 24px;
     flex: 1;

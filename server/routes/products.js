@@ -18,6 +18,45 @@ router.get('/', (req, res) => {
   }
 });
 
+// Создать новый товар (должен быть перед GET /:id)
+router.post('/', (req, res) => {
+  try {
+    const data = req.loadData();
+    const { name, latin, condition, price, category, emoji, popular, images } = req.body;
+
+    if (!name || !price || !category) {
+      return res.status(400).json({
+        success: false,
+        error: 'Необходимо указать название, цену и категорию'
+      });
+    }
+
+    const newProduct = {
+      id: Date.now(),
+      name,
+      latin: latin || '',
+      condition: condition || '',
+      price: Number(price),
+      category,
+      emoji: emoji || '🌿',
+      popular: popular || false,
+      images: images || []
+    };
+
+    const products = data.products || [];
+    products.push(newProduct);
+    data.products = products;
+
+    if (req.saveData(data)) {
+      res.json({ success: true, data: newProduct, message: 'Товар создан' });
+    } else {
+      res.status(500).json({ success: false, error: 'Ошибка сохранения товара' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Получить товары по категории
 router.get('/category/:categoryId', (req, res) => {
   try {

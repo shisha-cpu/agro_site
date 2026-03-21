@@ -61,13 +61,61 @@
         .admin-tab.active { color: #2d5033; border-bottom-color: #4a7c59; font-weight: 600; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* Категории и товары */
+        .categories-manage { display: grid; grid-template-columns: 300px 1fr; gap: 24px; }
+        .categories-sidebar { background: #f8f9fa; border-radius: 12px; padding: 20px; }
+        .categories-sidebar__title { font-size: 1.2rem; color: #2d5033; margin-bottom: 16px; }
+        .category-manage-item { padding: 12px; background: #fff; border-radius: 8px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
+        .category-manage-item:hover { border-color: #4a7c59; }
+        .category-manage-item.active { border-color: #2d5033; background: #e8f5e9; }
+        .category-manage-item__name { font-weight: 600; color: #2d5033; }
+        .category-manage-item__count { font-size: 0.85rem; color: #666; }
+        .category-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .btn-icon { padding: 4px 8px; font-size: 0.85rem; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-icon--edit { background: #4a7c59; color: #fff; }
+        .btn-icon--delete { background: #dc3545; color: #fff; }
+        .products-panel { background: #fff; border-radius: 12px; padding: 24px; }
+        .products-panel__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .products-panel__title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #2d5033; }
+        .products-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 16px; }
+        .products-table th, .products-table td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        .products-table th { background: #4a7c59; color: #fff; }
+        .products-table tr:nth-child(even) { background: #f8f9fa; }
+        .product-actions { display: flex; gap: 8px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal.active { display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #2d5033; margin-bottom: 20px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; color: #555; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #4a7c59; }
+        .form-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .upload-category-area { border: 2px dashed #4a7c59; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; margin-top: 16px; }
+        .upload-category-area:hover { background: #f0f7f4; }
+        .empty-state { text-align: center; padding: 40px; color: #666; }
+        .btn-small { padding: 6px 12px; font-size: 0.85rem; }
         
         /* Хиты продаж */
         .hits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 20px; }
         .hit-card { background: #f8f9fa; border-radius: 8px; padding: 16px; position: relative; }
-        .hit-card__remove { position: absolute; top: 8px; right: 8px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 1.2rem; }
+        .hit-card__remove { position: absolute; top: 8px; right: 8px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .hit-card__remove:hover { background: #c82333; }
+        .hit-card__edit { position: absolute; top: 8px; right: 44px; background: #4a7c59; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .hit-card__edit:hover { background: #2d5033; }
         .hit-card__name { font-weight: 600; color: #2d5033; margin-bottom: 8px; }
         .hit-card__price { color: #4a7c59; font-weight: 700; font-size: 1.1rem; }
+        
+        /* Модальное окно хитов */
+        .hit-modal-content { max-width: 600px; }
+        .hit-form-group { margin-bottom: 16px; }
+        .hit-form-group label { display: block; margin-bottom: 6px; color: #555; font-weight: 500; }
+        .hit-form-group input, .hit-form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
+        .hit-images-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 12px; }
+        .hit-image-item { position: relative; border-radius: 6px; overflow: hidden; border: 2px solid #e9ecef; }
+        .hit-image-item img { width: 100%; height: 80px; object-fit: cover; display: block; }
+        .hit-image-remove { position: absolute; top: 2px; right: 2px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.8rem; }
         
         /* Заказы */
         .orders-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 16px; }
@@ -103,6 +151,7 @@
         <!-- Табы навигации -->
         <div class="admin-tabs">
             <button class="admin-tab active" onclick="switchTab('import')">📥 Импорт</button>
+            <button class="admin-tab" onclick="switchTab('categories')">📂 Категории и товары</button>
             <button class="admin-tab" onclick="switchTab('hits')">🔥 Хиты продаж</button>
             <button class="admin-tab" onclick="switchTab('orders')">📋 Заказы</button>
         </div>
@@ -174,39 +223,121 @@
             </div>
         </div>
 
+        <!-- Вкладка категорий и товаров -->
+        <div id="tab-categories" class="tab-content">
+            <div class="admin-card">
+                <div class="products-panel__header">
+                    <h1 class="admin-title">📂 Управление категориями и товарами</h1>
+                    <button class="btn" onclick="openCreateCategoryModal()">➕ Создать категорию</button>
+                </div>
+
+                <div class="categories-manage">
+                    <!-- Список категорий -->
+                    <div class="categories-sidebar">
+                        <h3 class="categories-sidebar__title">Категории</h3>
+                        <div id="categoriesManageList">
+                            <div class="empty-state">Загрузка...</div>
+                        </div>
+                    </div>
+
+                    <!-- Панель товаров категории -->
+                    <div class="products-panel" id="productsPanel" style="display: none;">
+                        <div class="products-panel__header">
+                            <h2 class="products-panel__title" id="selectedCategoryTitle">Категория</h2>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-small" onclick="openAddProductModal()">➕ Добавить товар</button>
+                                <button class="btn btn-small btn-secondary" onclick="document.getElementById('categoryFileInput').click()">📥 Загрузить XLSX/JSON</button>
+                                <input type="file" id="categoryFileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
+                            </div>
+                        </div>
+
+                        <div class="upload-category-area" onclick="document.getElementById('categoryFileInput').click()">
+                            <div style="font-size: 2rem;">📁</div>
+                            <div>Перетащите файл или кликните для загрузки товаров в эту категорию</div>
+                            <div style="font-size: 0.85rem; color: #666; margin-top: 8px;">XLSX формат: Название | Латинское | Кондиция | Цена</div>
+                        </div>
+
+                        <div style="overflow-x: auto; margin-top: 20px;">
+                            <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Латинское</th>
+                                        <th>Кондиция</th>
+                                        <th>Цена</th>
+                                        <th>Популярный</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                    <tr><td colspan="6" style="text-align: center;">Загрузка...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="products-panel" id="noCategorySelected" style="display: block; grid-column: 2;">
+                        <div class="empty-state">
+                            <div style="font-size: 3rem; margin-bottom: 16px;">👈</div>
+                            <h3>Выберите категорию</h3>
+                            <p>Выберите категорию из списка слева для просмотра и редактирования товаров</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Вкладка хитов продаж -->
         <div id="tab-hits" class="tab-content">
             <div class="admin-card">
                 <h1 class="admin-title">🔥 Хиты продаж</h1>
-                <p style="color: #666; margin-bottom: 20px;">Загрузите XLSX или JSON файл с хитами продаж (максимум 9 товаров)</p>
-                
+                <p style="color: #666; margin-bottom: 20px;">Добавляйте товары в хиты продаж вручную или загрузите из файла (максимум 9 товаров)</p>
+
                 <div class="info-box">
                     <h4>📝 Как использовать</h4>
-                    <p><strong>Шаг 1:</strong> Подготовьте XLSX файл с хитами (формат: Название, Латинское, Кондиция, Цена)</p>
-                    <p><strong>Шаг 2:</strong> Загрузите файл через форму ниже</p>
+                    <p><strong>Шаг 1:</strong> Выберите товары из каталога или загрузите XLSX/JSON файл с хитами</p>
+                    <p><strong>Шаг 2:</strong> Товары отобразятся в списке текущих хитов</p>
                     <p><strong>Шаг 3:</strong> Хиты отобразятся на главной странице</p>
-                    <p style="margin-top: 8px;"><strong>💡 Формат XLSX:</strong> Первый лист будет использован, максимум 9 товаров</p>
-                </div>
-                
-                <div class="upload-area" id="hitsUploadArea" style="margin-top: 20px;">
-                    <div class="upload-icon">📁</div>
-                    <div class="upload-text">Перетащите XLSX или JSON файл сюда или кликните для выбора</div>
-                    <div class="import-buttons">
-                        <button class="btn" id="hitsUploadBtn" onclick="document.getElementById('hitsFileInput').click()">Выбрать файл</button>
-                    </div>
-                    <input type="file" id="hitsFileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
+                    <p style="margin-top: 8px;"><strong>💡 Максимум 9 товаров</strong> можно добавить в хиты продаж</p>
                 </div>
 
-                <div class="progress-bar" id="hitsProgressBar" style="display: none; margin-top: 16px;">
-                    <div class="progress-fill" id="hitsProgressFill"></div>
-                </div>
-                <div class="log" id="hitsLog" style="display: none; margin-top: 16px;"></div>
-                
+                <!-- Поиск и добавление товаров -->
                 <div style="margin-top: 20px;">
-                    <h3 style="color: #2d5033; margin-bottom: 12px;">Текущие хиты:</h3>
+                    <h3 style="color: #2d5033; margin-bottom: 12px;">➕ Добавить товар в хиты</h3>
+                    <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                        <input type="text" id="hitsSearchInput" placeholder="Поиск товаров по названию..." style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">
+                        <button class="btn" onclick="searchProductsForHits()">🔍 Найти</button>
+                    </div>
+                    <div id="hitsSearchResults" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; max-height: 300px; overflow-y: auto; padding: 12px; background: #f8f9fa; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Загрузка из файла -->
+                <div style="margin-top: 24px;">
+                    <h3 style="color: #2d5033; margin-bottom: 12px;">📥 Или загрузите из файла</h3>
+                    <div class="upload-area" id="hitsUploadArea" style="margin-top: 10px;">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">Перетащите XLSX или JSON файл сюда или кликните для выбора</div>
+                        <div class="import-buttons">
+                            <button class="btn" id="hitsUploadBtn" onclick="document.getElementById('hitsFileInput').click()">Выбрать файл</button>
+                        </div>
+                        <input type="file" id="hitsFileInput" class="hidden-input" accept=".xlsx, .xls, .json" />
+                    </div>
+
+                    <div class="progress-bar" id="hitsProgressBar" style="display: none; margin-top: 16px;">
+                        <div class="progress-fill" id="hitsProgressFill"></div>
+                    </div>
+                    <div class="log" id="hitsLog" style="display: none; margin-top: 16px;"></div>
+                </div>
+
+                <!-- Текущие хиты -->
+                <div style="margin-top: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="color: #2d5033; margin: 0;">📊 Текущие хиты продаж (<span id="hitsCount">0</span>/9)</h3>
+                        <button class="btn btn-small" onclick="openAddHitModal()">➕ Добавить хит вручную</button>
+                    </div>
                     <div class="hits-grid" id="hitsGrid"></div>
                 </div>
-                
+
                 <div style="margin-top: 20px; text-align: center;">
                     <button class="btn btn-danger" onclick="clearHits()">🗑️ Удалить все хиты</button>
                 </div>
@@ -244,21 +375,173 @@
         </div>
     </div>
 
+    <!-- Модальное окно: Создать/Редактировать категорию -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="categoryModalTitle">Создать категорию</h2>
+            <form id="categoryForm">
+                <input type="hidden" id="editCategoryId">
+                <div class="form-group">
+                    <label for="categoryId">ID категории (латиницей)</label>
+                    <input type="text" id="categoryId" required placeholder="например: хвойные">
+                </div>
+                <div class="form-group">
+                    <label for="categoryName">Название</label>
+                    <input type="text" id="categoryName" required placeholder="например: Хвойные">
+                </div>
+                <div class="form-group">
+                    <label for="categoryEmoji">Эмодзи</label>
+                    <input type="text" id="categoryEmoji" placeholder="🌲" value="🌲">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Добавить/Редактировать товар -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="productModalTitle">Добавить товар</h2>
+            <form id="productForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-group">
+                    <label for="productName">Название *</label>
+                    <input type="text" id="productName" required placeholder="например: Ель европейская">
+                </div>
+                <div class="form-group">
+                    <label for="productLatin">Латинское название</label>
+                    <input type="text" id="productLatin" placeholder="например: Picea abies">
+                </div>
+                <div class="form-group">
+                    <label for="productCondition">Кондиция</label>
+                    <input type="text" id="productCondition" placeholder="например: 150-175 rb Extra">
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Цена (₽) *</label>
+                    <input type="number" id="productPrice" required placeholder="1000">
+                </div>
+                <div class="form-group">
+                    <label for="productEmoji">Эмодзи</label>
+                    <input type="text" id="productEmoji" placeholder="🌲" value="🌲">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="productPopular"> Популярный товар
+                    </label>
+                </div>
+                
+                <!-- Управление изображениями -->
+                <div class="form-group">
+                    <label>📷 Изображения товара</label>
+                    <div class="images-manager" style="margin-top: 10px;">
+                        <div class="image-input-wrapper">
+                            <input type="text" id="newImageUrl" placeholder="Введите ссылку на изображение (https://...)" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;">
+                            <button type="button" class="btn btn-small" onclick="addImageFromInput()" style="margin-left: 8px;">➕ Добавить</button>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.85rem; color: #666;">или загрузите из файла:</div>
+                        <input type="file" id="imageFileInput" accept="image/*" style="margin-top: 8px;" onchange="handleImageFileSelect(event)">
+                        
+                        <!-- Список добавленных изображений -->
+                        <div id="productImagesList" class="images-list" style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px;"></div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Редактирование хита -->
+    <div class="modal" id="hitModal">
+        <div class="modal-content hit-modal-content">
+            <h2 class="modal-title" id="hitModalTitle">Редактировать хит</h2>
+            <form id="hitForm">
+                <input type="hidden" id="editHitIndex">
+                <div class="hit-form-group">
+                    <label for="hitName">Название *</label>
+                    <input type="text" id="hitName" required placeholder="например: Ель европейская">
+                </div>
+                <div class="hit-form-group">
+                    <label for="hitLatin">Латинское название</label>
+                    <input type="text" id="hitLatin" placeholder="например: Picea abies">
+                </div>
+                <div class="hit-form-group">
+                    <label for="hitCondition">Кондиция</label>
+                    <input type="text" id="hitCondition" placeholder="например: 150-175 rb Extra">
+                </div>
+                <div class="hit-form-group">
+                    <label for="hitPrice">Цена (₽) *</label>
+                    <input type="number" id="hitPrice" required placeholder="1000">
+                </div>
+                <div class="hit-form-group">
+                    <label for="hitCategory">Категория</label>
+                    <select id="hitCategory">
+                        <option value="хвойные">🌲 Хвойные</option>
+                        <option value="лиственные">🍃 Лиственные декоративные</option>
+                        <option value="плодовые">🍎 Плодовые</option>
+                        <option value="цветы">🌸 Цветы</option>
+                        <option value="тропические">🌴 Тропические</option>
+                        <option value="иммуностимуляторы">💊 Иммуностимуляторы</option>
+                        <option value="рододендроны">🌺 Рододендроны</option>
+                        <option value="лианы">🌿 Лианы</option>
+                    </select>
+                </div>
+                <div class="hit-form-group">
+                    <label for="hitEmoji">Эмодзи</label>
+                    <input type="text" id="hitEmoji" placeholder="🌲" value="🌲">
+                </div>
+                
+                <!-- Управление изображениями -->
+                <div class="hit-form-group">
+                    <label>📷 Изображения</label>
+                    <div style="margin-top: 10px;">
+                        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                            <input type="text" id="newHitImageUrl" placeholder="URL изображения" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <button type="button" class="btn btn-small" onclick="addHitImageFromInput()">➕</button>
+                        </div>
+                        <input type="file" id="hitImageFileInput" accept="image/*" onchange="handleHitImageFileSelect(event)">
+                        <div id="hitImagesList" class="hit-images-list"></div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeHitModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'https://greenmagics.ru/api';
         let currentHits = [];
         let allProducts = [];
+        let allCategories = [];
+        let selectedCategoryId = null;
 
         // Переключение табов
         function switchTab(tabName) {
             document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
+
             document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
             document.getElementById(`tab-${tabName}`).classList.add('active');
-            
-            if (tabName === 'hits') loadHits();
+
+            if (tabName === 'hits') {
+                loadHits();
+                // Загружаем товары, если ещё не загружены
+                if (allProducts.length === 0) {
+                    loadData();
+                }
+            }
             if (tabName === 'orders') loadOrders();
+            if (tabName === 'categories') loadCategoriesManage();
         }
 
         const uploadArea = document.getElementById('uploadArea');
@@ -398,7 +681,9 @@
                 const categoriesData = await categoriesRes.json();
 
                 if (productsData.success && categoriesData.success) {
-                    showStats(productsData.data, categoriesData.data);
+                    allProducts = productsData.data || [];
+                    allCategories = categoriesData.data || [];
+                    showStats(allProducts, categoriesData.data);
                 }
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
@@ -466,6 +751,16 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             checkServerStatus();
+            
+            // Обработка Enter в поле поиска хитов
+            const hitsSearchInput = document.getElementById('hitsSearchInput');
+            if (hitsSearchInput) {
+                hitsSearchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        searchProductsForHits();
+                    }
+                });
+            }
         });
 
         // ========================================
@@ -551,10 +846,119 @@
 
                 if (result.success) {
                     currentHits = result.data || [];
+                    // Если хитов нет, загружаем предустановленные
+                    if (currentHits.length === 0) {
+                        initializeDefaultHits();
+                    }
                     renderHitsGrid();
+                    updateHitsCount();
                 }
             } catch (error) {
                 console.error('Ошибка загрузки хитов:', error);
+            }
+        }
+
+        // Инициализация хитов продаж по умолчанию
+        function initializeDefaultHits() {
+            currentHits = [
+                {
+                    id: 1,
+                    name: "Пихта сибирская",
+                    latin: "Abies sibirica",
+                    condition: "C5",
+                    price: 5500,
+                    category: "хвойные",
+                    emoji: "🌲",
+                    images: ["https://placehold.co/400x300/1a5f3a/ffffff?text=Пихта+Сибирская"]
+                },
+                {
+                    id: 2,
+                    name: "Клён красный Канадский Кримсон Кинг",
+                    latin: "Acer rubrum Crimson King",
+                    condition: "C7.5",
+                    price: 22000,
+                    category: "лиственные",
+                    emoji: "🍁",
+                    images: ["https://placehold.co/400x300/8b0000/ffffff?text=Клен+Кримсон+Кинг"]
+                },
+                {
+                    id: 3,
+                    name: "Малина жёлтая Ананасная",
+                    latin: "Rubus idaeus Ananasnaya",
+                    condition: "C3",
+                    price: 1100,
+                    category: "плодовые",
+                    emoji: "🫐",
+                    images: ["https://placehold.co/400x300/ffd700/333333?text=Малина+Ананасная"]
+                },
+                {
+                    id: 4,
+                    name: "Лаванда узколистная",
+                    latin: "Lavandula angustifolia",
+                    condition: "C2",
+                    price: 650,
+                    category: "цветы",
+                    emoji: "🌸",
+                    images: ["https://placehold.co/400x300/9370db/ffffff?text=Лаванда"]
+                },
+                {
+                    id: 5,
+                    name: "Стрелиция Николая",
+                    latin: "Strelitzia nicolai",
+                    condition: "C10",
+                    price: 12000,
+                    category: "тропические",
+                    emoji: "🌴",
+                    images: ["https://placehold.co/400x300/228b22/ffffff?text=Стрелиция"]
+                },
+                {
+                    id: 6,
+                    name: "Полынь Шмидта",
+                    latin: "Artemisia schmidtiana",
+                    condition: "C2",
+                    price: 550,
+                    category: "цветы",
+                    emoji: "🌿",
+                    images: ["https://placehold.co/400x300/c0c0c0/333333?text=Полынь+Шмидта"]
+                },
+                {
+                    id: 7,
+                    name: "Вейник Карл Форстер",
+                    latin: "Calamagrostis Karl Foerster",
+                    condition: "C3",
+                    price: 750,
+                    category: "цветы",
+                    emoji: "🌾",
+                    images: ["https://placehold.co/400x300/d2b48c/333333?text=Вейник"]
+                },
+                {
+                    id: 8,
+                    name: "Яблоня колоновидная Медок",
+                    latin: "Malus Medok",
+                    condition: "C5",
+                    price: 2300,
+                    category: "плодовые",
+                    emoji: "🍎",
+                    images: ["https://placehold.co/400x300/ff6347/ffffff?text=Яблоня+Медок"]
+                },
+                {
+                    id: 9,
+                    name: "Слива колоновидная Бирбанк",
+                    latin: "Prunus Birbank",
+                    condition: "C5",
+                    price: 2500,
+                    category: "плодовые",
+                    emoji: "🫐",
+                    images: ["https://placehold.co/400x300/9932cc/ffffff?text=Слива+Бирбанк"]
+                }
+            ];
+            saveHits();
+        }
+
+        function updateHitsCount() {
+            const countEl = document.getElementById('hitsCount');
+            if (countEl) {
+                countEl.textContent = currentHits.length;
             }
         }
 
@@ -564,6 +968,7 @@
 
             if (currentHits.length === 0) {
                 grid.innerHTML = '<p style="color: #666; text-align: center; grid-column: 1/-1;">Хиты продаж не загружены</p>';
+                updateHitsCount();
                 return;
             }
 
@@ -571,7 +976,17 @@
             currentHits.forEach((hit, index) => {
                 const card = document.createElement('div');
                 card.className = 'hit-card';
+                
+                // Получаем изображение или используем эмодзи
+                const mainImage = hit.images && hit.images.length > 0 ? hit.images[0] : null;
+                const imageHtml = mainImage 
+                    ? `<img src="${mainImage}" alt="${hit.name}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">`
+                    : `<div style="width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; background: #f0f7f4; border-radius: 8px; margin-bottom: 8px; font-size: 3rem;">${hit.emoji || '🌿'}</div>`;
+                
                 card.innerHTML = `
+                    <button class="hit-card__edit" onclick="openEditHitModal(${index})" title="Редактировать">✏️</button>
+                    <button class="hit-card__remove" onclick="removeHit(${index})" title="Удалить из хитов">×</button>
+                    ${imageHtml}
                     <div class="hit-card__name">${hit.emoji || '🌿'} ${hit.name}</div>
                     <div class="hit-card__price">${hit.price.toLocaleString('ru-RU')} ₽</div>
                     ${hit.latin ? `<div style="font-size: 0.85rem; color: #666; font-style: italic;">${hit.latin}</div>` : ''}
@@ -579,26 +994,273 @@
                 `;
                 grid.appendChild(card);
             });
+            
+            updateHitsCount();
         }
+
+        // Поиск товаров для добавления в хиты
+        async function searchProductsForHits() {
+            const query = document.getElementById('hitsSearchInput').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('hitsSearchResults');
+            
+            if (!query) {
+                resultsContainer.innerHTML = '<p style="color: #666; grid-column: 1/-1;">Введите название товара для поиска</p>';
+                return;
+            }
+            
+            // Фильтруем товары из allProducts
+            const filtered = allProducts.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                (p.latin && p.latin.toLowerCase().includes(query))
+            ).slice(0, 20); // Ограничиваем до 20 результатов
+            
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = '<p style="color: #666; grid-column: 1/-1;">Товары не найдены</p>';
+                return;
+            }
+            
+            resultsContainer.innerHTML = '';
+            filtered.forEach(product => {
+                // Проверяем, есть ли уже в хитах
+                const isInHits = currentHits.some(h => h.id === product.id);
+                
+                const card = document.createElement('div');
+                card.style.background = '#fff';
+                card.style.padding = '12px';
+                card.style.borderRadius = '8px';
+                card.style.border = '1px solid #e9ecef';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.gap = '8px';
+                
+                // Получаем изображение или используем эмодзи
+                const mainImage = product.images && product.images.length > 0 ? product.images[0] : null;
+                const imageHtml = mainImage 
+                    ? `<img src="${mainImage}" alt="${product.name}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 6px;">`
+                    : `<div style="width: 100%; height: 100px; display: flex; align-items: center; justify-content: center; background: #f0f7f4; border-radius: 6px; font-size: 2.5rem;">${product.emoji || '🌿'}</div>`;
+                
+                card.innerHTML = `
+                    ${imageHtml}
+                    <div style="font-weight: 600; font-size: 0.9rem;">${product.name}</div>
+                    <div style="color: #4a7c59; font-weight: 700;">${product.price.toLocaleString('ru-RU')} ₽</div>
+                    <button class="btn btn-small" ${isInHits ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''} onclick="addProductToHits(${product.id})">
+                        ${isInHits ? '✓ В хитах' : '➕ В хиты'}
+                    </button>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        // Добавление товара в хиты
+        function addProductToHits(productId) {
+            if (currentHits.length >= 9) {
+                alert('Максимум 9 товаров можно добавить в хиты продаж');
+                return;
+            }
+            
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Проверяем, есть ли уже в хитах
+            if (currentHits.some(h => h.id === product.id)) {
+                alert('Этот товар уже в хитах');
+                return;
+            }
+            
+            currentHits.push(product);
+            saveHits();
+            renderHitsGrid();
+            searchProductsForHits(); // Обновляем результаты поиска
+        }
+
+        // Удаление товара из хитов
+        function removeHit(index) {
+            if (confirm('Удалить этот товар из хитов продаж?')) {
+                currentHits.splice(index, 1);
+                saveHits();
+                renderHitsGrid();
+            }
+        }
+
+        // Сохранение хитов на сервер
+        async function saveHits() {
+            try {
+                const response = await fetch(`${API_URL}/hits`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ hits: currentHits })
+                });
+                
+                const result = await response.json();
+                if (!result.success) {
+                    console.error('Ошибка сохранения хитов:', result.error);
+                }
+            } catch (error) {
+                console.error('Ошибка сохранения хитов:', error);
+            }
+        }
+
+        // ========================================
+        // Редактирование хитов
+        // ========================================
+        
+        let currentHitImages = [];
+
+        // Открытие модального окна редактирования хита
+        function openEditHitModal(index) {
+            const hit = currentHits[index];
+            if (!hit) return;
+            
+            document.getElementById('hitModalTitle').textContent = 'Редактировать хит';
+            document.getElementById('editHitIndex').value = index;
+            document.getElementById('hitName').value = hit.name || '';
+            document.getElementById('hitLatin').value = hit.latin || '';
+            document.getElementById('hitCondition').value = hit.condition || '';
+            document.getElementById('hitPrice').value = hit.price || '';
+            document.getElementById('hitCategory').value = hit.category || 'хвойные';
+            document.getElementById('hitEmoji').value = hit.emoji || '🌿';
+            
+            // Загружаем изображения
+            currentHitImages = hit.images || [];
+            renderHitImagesList();
+            
+            document.getElementById('hitModal').classList.add('active');
+        }
+
+        // Открытие модального окна добавления хита вручную
+        function openAddHitModal() {
+            if (currentHits.length >= 9) {
+                alert('Максимум 9 товаров можно добавить в хиты продаж');
+                return;
+            }
+            
+            document.getElementById('hitModalTitle').textContent = 'Добавить хит вручную';
+            document.getElementById('editHitIndex').value = '-1';
+            document.getElementById('hitForm').reset();
+            document.getElementById('hitEmoji').value = '🌿';
+            currentHitImages = [];
+            renderHitImagesList();
+            document.getElementById('hitModal').classList.add('active');
+        }
+
+        function closeHitModal() {
+            document.getElementById('hitModal').classList.remove('active');
+        }
+
+        // Отрисовка списка изображений хита
+        function renderHitImagesList() {
+            const container = document.getElementById('hitImagesList');
+            if (!container) return;
+            
+            if (currentHitImages.length === 0) {
+                container.innerHTML = '<p style="color: #666; font-size: 0.85rem; grid-column: 1/-1;">Изображения не добавлены</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            currentHitImages.forEach((url, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'hit-image-item';
+                
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `Изображение ${index + 1}`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'hit-image-remove';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = () => removeHitImage(index);
+                
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+                container.appendChild(wrapper);
+            });
+        }
+
+        // Добавление изображения хита из URL
+        function addHitImageFromInput() {
+            const input = document.getElementById('newHitImageUrl');
+            const url = input.value.trim();
+            
+            if (!url) {
+                alert('Введите URL изображения');
+                return;
+            }
+            
+            currentHitImages.push(url);
+            renderHitImagesList();
+            input.value = '';
+        }
+
+        // Обработка загрузки файла изображения хита
+        function handleHitImageFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Пожалуйста, выберите файл изображения');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentHitImages.push(e.target.result);
+                renderHitImagesList();
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        // Удаление изображения хита
+        function removeHitImage(index) {
+            currentHitImages.splice(index, 1);
+            renderHitImagesList();
+        }
+
+        // Обработка формы редактирования хита
+        document.getElementById('hitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const index = parseInt(document.getElementById('editHitIndex').value);
+            
+            const hitData = {
+                name: document.getElementById('hitName').value.trim(),
+                latin: document.getElementById('hitLatin').value.trim(),
+                condition: document.getElementById('hitCondition').value.trim(),
+                price: Number(document.getElementById('hitPrice').value),
+                category: document.getElementById('hitCategory').value,
+                emoji: document.getElementById('hitEmoji').value.trim() || '🌿',
+                images: [...currentHitImages]
+            };
+            
+            if (!hitData.name || !hitData.price) {
+                alert('Заполните обязательные поля');
+                return;
+            }
+            
+            if (index >= 0) {
+                // Редактирование существующего
+                currentHits[index] = hitData;
+            } else {
+                // Добавление нового
+                if (currentHits.length >= 9) {
+                    alert('Максимум 9 товаров можно добавить в хиты');
+                    return;
+                }
+                hitData.id = Date.now(); // Генерируем уникальный ID
+                currentHits.push(hitData);
+            }
+            
+            saveHits();
+            renderHitsGrid();
+            closeHitModal();
+        });
 
         async function clearHits() {
             if (confirm('Вы уверены, что хотите удалить все хиты продаж?')) {
-                try {
-                    const response = await fetch(`${API_URL}/hits`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ hits: [] })
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        currentHits = [];
-                        renderHitsGrid();
-                        alert('✅ Хиты удалены');
-                    }
-                } catch (error) {
-                    alert('❌ Ошибка: ' + error.message);
-                }
+                currentHits = [];
+                saveHits();
+                renderHitsGrid();
             }
         }
 
@@ -688,6 +1350,485 @@
             } catch (error) {
                 alert('❌ Ошибка обновления: ' + error.message);
             }
+        }
+
+        // ========================================
+        // Управление категориями и товарами
+        // ========================================
+
+        // Загрузка категорий для управления
+        async function loadCategoriesManage() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                const result = await response.json();
+
+                if (result.success) {
+                    allCategories = result.data || [];
+                    renderCategoriesManageList();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки категорий:', error);
+            }
+        }
+
+        function renderCategoriesManageList() {
+            const container = document.getElementById('categoriesManageList');
+            if (!container) return;
+
+            if (allCategories.length === 0) {
+                container.innerHTML = '<div class="empty-state">Нет категорий</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            allCategories.forEach(cat => {
+                const item = document.createElement('div');
+                item.className = 'category-manage-item';
+                if (selectedCategoryId === cat.id) item.classList.add('active');
+                item.innerHTML = `
+                    <div class="category-manage-item__name">${cat.emoji || '🌿'} ${cat.name}</div>
+                    <div class="category-manage-item__count">${cat.count || 0} товаров</div>
+                    <div class="category-actions">
+                        <button class="btn-icon btn-icon--edit" onclick="event.stopPropagation(); openEditCategoryModal('${cat.id}')" title="Редактировать">✏️</button>
+                        <button class="btn-icon btn-icon--delete" onclick="event.stopPropagation(); deleteCategory('${cat.id}')" title="Удалить">🗑️</button>
+                    </div>
+                `;
+                item.onclick = () => selectCategory(cat.id);
+                container.appendChild(item);
+            });
+        }
+
+        function selectCategory(categoryId) {
+            selectedCategoryId = categoryId;
+            const category = allCategories.find(c => c.id === categoryId);
+            
+            document.getElementById('noCategorySelected').style.display = 'none';
+            document.getElementById('productsPanel').style.display = 'block';
+            document.getElementById('selectedCategoryTitle').textContent = `${category?.emoji || '🌿'} ${category?.name || 'Категория'}`;
+            
+            renderCategoriesManageList();
+            loadProductsByCategory(categoryId);
+        }
+
+        async function loadProductsByCategory(categoryId) {
+            try {
+                const response = await fetch(`${API_URL}/products/category/${categoryId}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    renderProductsTable(result.data || []);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки товаров:', error);
+            }
+        }
+
+        function renderProductsTable(products) {
+            const tbody = document.getElementById('productsTableBody');
+            if (!tbody) return;
+
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666;">Товаров нет</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${product.latin || '-'}</td>
+                    <td>${product.condition || '-'}</td>
+                    <td>${product.price.toLocaleString('ru-RU')} ₽</td>
+                    <td>${product.popular ? '✅' : '-'}</td>
+                    <td class="product-actions">
+                        <button class="btn-icon btn-icon--edit" onclick="openEditProductModal(${product.id})" title="Редактировать">✏️</button>
+                        <button class="btn-icon btn-icon--delete" onclick="deleteProduct(${product.id})" title="Удалить">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Модальное окно категории
+        function openCreateCategoryModal() {
+            document.getElementById('categoryModalTitle').textContent = 'Создать категорию';
+            document.getElementById('categoryForm').reset();
+            document.getElementById('editCategoryId').value = '';
+            document.getElementById('categoryId').disabled = false;
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        function openEditCategoryModal(categoryId) {
+            const category = allCategories.find(c => c.id === categoryId);
+            if (!category) return;
+
+            document.getElementById('categoryModalTitle').textContent = 'Редактировать категорию';
+            document.getElementById('editCategoryId').value = category.id;
+            document.getElementById('categoryId').value = category.id;
+            document.getElementById('categoryId').disabled = true;
+            document.getElementById('categoryName').value = category.name;
+            document.getElementById('categoryEmoji').value = category.emoji || '🌿';
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.remove('active');
+        }
+
+        document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const editId = document.getElementById('editCategoryId').value;
+            const categoryId = document.getElementById('categoryId').value.trim();
+            const categoryName = document.getElementById('categoryName').value.trim();
+            const categoryEmoji = document.getElementById('categoryEmoji').value.trim() || '🌿';
+
+            if (!categoryId || !categoryName) {
+                alert('Заполните обязательные поля');
+                return;
+            }
+
+            try {
+                let response;
+                let result;
+
+                if (editId) {
+                    // Редактирование
+                    response = await fetch(`${API_URL}/categories/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: categoryName, emoji: categoryEmoji })
+                    });
+                } else {
+                    // Создание
+                    response = await fetch(`${API_URL}/categories`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: categoryId, name: categoryName, emoji: categoryEmoji })
+                    });
+                }
+
+                result = await response.json();
+                if (result.success) {
+                    alert('✅ Категория ' + (editId ? 'обновлена' : 'создана'));
+                    closeCategoryModal();
+                    loadCategoriesManage();
+                    if (selectedCategoryId) selectCategory(selectedCategoryId);
+                } else {
+                    alert('❌ Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Ошибка: ' + error.message);
+            }
+        });
+
+        async function deleteCategory(categoryId) {
+            if (!confirm('Вы уверены, что хотите удалить эту категорию?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/categories/${categoryId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('✅ Категория удалена');
+                    if (selectedCategoryId === categoryId) {
+                        selectedCategoryId = null;
+                        document.getElementById('noCategorySelected').style.display = 'block';
+                        document.getElementById('productsPanel').style.display = 'none';
+                    }
+                    loadCategoriesManage();
+                } else {
+                    alert('❌ Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Ошибка: ' + error.message);
+            }
+        }
+
+        // Модальное окно товара
+        function openAddProductModal() {
+            if (!selectedCategoryId) {
+                alert('Выберите категорию');
+                return;
+            }
+            document.getElementById('productModalTitle').textContent = 'Добавить товар';
+            document.getElementById('productForm').reset();
+            document.getElementById('editProductId').value = '';
+            currentProductImages = []; // Очищаем изображения
+            renderProductImagesList();
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function openEditProductModal(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('productModalTitle').textContent = 'Редактировать товар';
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productLatin').value = product.latin || '';
+            document.getElementById('productCondition').value = product.condition || '';
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productEmoji').value = product.emoji || '🌿';
+            document.getElementById('productPopular').checked = product.popular || false;
+            
+            // Загружаем текущие изображения товара
+            currentProductImages = product.images || [];
+            renderProductImagesList();
+            
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const editId = document.getElementById('editProductId').value;
+            const product = {
+                name: document.getElementById('productName').value.trim(),
+                latin: document.getElementById('productLatin').value.trim(),
+                condition: document.getElementById('productCondition').value.trim(),
+                price: Number(document.getElementById('productPrice').value),
+                emoji: document.getElementById('productEmoji').value.trim() || '🌿',
+                popular: document.getElementById('productPopular').checked,
+                category: selectedCategoryId,
+                images: getProductImages() // Добавляем изображения
+            };
+
+            if (!product.name || !product.price) {
+                alert('Заполните обязательные поля');
+                return;
+            }
+
+            try {
+                let response;
+                let result;
+
+                if (editId) {
+                    // Редактирование
+                    response = await fetch(`${API_URL}/products/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(product)
+                    });
+                } else {
+                    // Создание
+                    response = await fetch(`${API_URL}/products`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(product)
+                    });
+                }
+
+                result = await response.json();
+                if (result.success) {
+                    alert('✅ Товар ' + (editId ? 'обновлён' : 'добавлен'));
+                    closeProductModal();
+                    loadProductsByCategory(selectedCategoryId);
+                    loadCategoriesManage();
+                } else {
+                    alert('❌ Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Ошибка: ' + error.message);
+            }
+        });
+
+        async function deleteProduct(productId) {
+            if (!confirm('Вы уверены, что хотите удалить этот товар?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/products/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('✅ Товар удалён');
+                    loadProductsByCategory(selectedCategoryId);
+                    loadCategoriesManage();
+                } else {
+                    alert('❌ Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Ошибка: ' + error.message);
+            }
+        }
+
+        // Загрузка XLSX/JSON в категорию
+        const categoryFileInput = document.getElementById('categoryFileInput');
+        if (categoryFileInput) {
+            categoryFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && selectedCategoryId) {
+                    uploadFileToCategory(file, selectedCategoryId);
+                }
+                e.target.value = '';
+            });
+        }
+
+        async function uploadFileToCategory(file, categoryId) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const isJson = file.name.endsWith('.json');
+            const endpoint = isJson ? `upload-category-json/${categoryId}` : `upload-category-xlsx/${categoryId}`;
+
+            try {
+                const response = await fetch(`${API_URL}/import/${endpoint}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`✅ ${result.message}`);
+                    loadProductsByCategory(categoryId);
+                    loadCategoriesManage();
+                } else {
+                    alert('❌ Ошибка: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Ошибка загрузки: ' + error.message);
+            }
+        }
+
+        // Загрузка всех товаров для редактирования
+        async function loadAllProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const result = await response.json();
+                if (result.success) {
+                    allProducts = result.data || [];
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки товаров:', error);
+            }
+        }
+
+        // ========================================
+        // Управление изображениями товаров
+        // ========================================
+        
+        let currentProductImages = [];
+
+        // Добавление изображения из текстового поля
+        function addImageFromInput() {
+            const input = document.getElementById('newImageUrl');
+            const url = input.value.trim();
+            
+            if (!url) {
+                alert('Введите URL изображения');
+                return;
+            }
+            
+            if (!isValidImageUrl(url)) {
+                alert('Пожалуйста, введите корректный URL изображения');
+                return;
+            }
+            
+            currentProductImages.push(url);
+            renderProductImagesList();
+            input.value = '';
+        }
+
+        // Проверка URL изображения
+        function isValidImageUrl(url) {
+            return url.match(/\.(jpeg|jpg|gif|png|webp|svg|bmp|ico)$/i) || url.includes('http');
+        }
+
+        // Обработка загрузки файла
+        function handleImageFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Пожалуйста, выберите файл изображения');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Для простоты используем Data URL (base64)
+                // В продакшене лучше загружать на сервер
+                currentProductImages.push(e.target.result);
+                renderProductImagesList();
+            };
+            reader.readAsDataURL(file);
+            
+            // Очищаем input для возможности повторной загрузки того же файла
+            event.target.value = '';
+        }
+
+        // Отрисовка списка изображений
+        function renderProductImagesList() {
+            const container = document.getElementById('productImagesList');
+            if (!container) return;
+            
+            if (currentProductImages.length === 0) {
+                container.innerHTML = '<p style="color: #666; font-size: 0.85rem; grid-column: 1/-1;">Изображения не добавлены</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            currentProductImages.forEach((url, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.borderRadius = '8px';
+                wrapper.style.overflow = 'hidden';
+                wrapper.style.border = '2px solid #e9ecef';
+                
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `Изображение ${index + 1}`;
+                img.style.width = '100%';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.style.display = 'block';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '×';
+                removeBtn.style.position = 'absolute';
+                removeBtn.style.top = '4px';
+                removeBtn.style.right = '4px';
+                removeBtn.style.background = '#dc3545';
+                removeBtn.style.color = 'white';
+                removeBtn.style.border = 'none';
+                removeBtn.style.borderRadius = '50%';
+                removeBtn.style.width = '24px';
+                removeBtn.style.height = '24px';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.style.fontSize = '1rem';
+                removeBtn.style.lineHeight = '1';
+                removeBtn.onclick = () => removeImage(index);
+                
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+                container.appendChild(wrapper);
+            });
+        }
+
+        // Удаление изображения
+        function removeImage(index) {
+            currentProductImages.splice(index, 1);
+            renderProductImagesList();
+        }
+
+        // Получение текущего списка изображений
+        function getProductImages() {
+            return [...currentProductImages];
+        }
+
+        // Очистка списка изображений
+        function clearProductImages() {
+            currentProductImages = [];
+            renderProductImagesList();
         }
     </script>
 </body>
