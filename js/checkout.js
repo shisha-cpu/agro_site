@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderForm = document.getElementById('order-form');
     const successModal = document.getElementById('success-modal');
     const modalClose = document.getElementById('modal-close');
-    const yoomoneyForm = document.getElementById('yoomoney-form');
+    const yookassaForm = document.getElementById('yookassa-form');
     const paymentRadios = document.querySelectorAll('input[name="payment"]');
 
     // Проверка: если корзина пуста, перенаправляем в каталог
@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Показ/скрытие формы ЮMoney
+    // Показ/скрытие формы ЮKassa
     paymentRadios.forEach(radio => {
         radio.addEventListener('change', () => {
-            if (yoomoneyForm) {
-                yoomoneyForm.style.display = radio.value === 'yoomoney' ? 'block' : 'none';
+            if (yookassaForm) {
+                yookassaForm.style.display = radio.value === 'yookassa' ? 'block' : 'none';
             }
         });
     });
@@ -115,29 +115,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(result.error || 'Ошибка оформления заказа');
                 }
 
-                // Очищаем корзину
-                cart.clear();
-
-                // Если есть URL для оплаты - перенаправляем
+                // Если есть URL для оплаты - перенаправляем на ЮKassa
                 if (result.confirmationUrl) {
-                    // Сохраняем ID заказа для возврата
+                    // Сохраняем ID заказа и данные корзины для проверки после оплаты
                     sessionStorage.setItem('orderId', result.orderId);
+                    sessionStorage.setItem('pendingOrder', JSON.stringify({
+                        items: cart.items,
+                        total: cart.getFullTotal()
+                    }));
+                    // Перенаправляем на страницу оплаты
                     window.location.href = result.confirmationUrl;
                     return;
                 }
 
-                // Показываем модальное окно успеха
-                if (successModal) {
-                    successModal.classList.add('active');
-                    
-                    // Обновляем текст для тестового режима
-                    if (result.testMode) {
-                        const successText = successModal.querySelector('.success-message__text');
-                        if (successText) {
-                            successText.textContent = 'Спасибо за заказ! Наш менеджер свяжется с вами в ближайшее время. (Тестовый режим - оплата не требуется)';
-                        }
+                // Если оплата при получении - очищаем корзину и показываем успех
+                if (formData.get('payment') === 'cash') {
+                    cart.clear();
+                    if (successModal) {
+                        successModal.classList.add('active');
                     }
+                    return;
                 }
+
+                // Если нет confirmationUrl и не cash - ошибка
+                throw new Error('Не получен URL для оплаты');
 
             } catch (error) {
                 console.error('Ошибка оформления заказа:', error);
@@ -169,22 +170,35 @@ document.addEventListener('DOMContentLoaded', () => {
     async function checkPaymentReturn() {
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('order') || sessionStorage.getItem('orderId');
-        
+
         if (orderId) {
             try {
                 const response = await fetch(`/api/payment-status/${orderId}`);
                 const result = await response.json();
-                
-                if (result.success && result.status === 'paid') {
-                    // Показываем успешное сообщение
-                    if (successModal) {
-                        successModal.classList.add('active');
-                        const title = successModal.querySelector('.success-message__title');
-                        const text = successModal.querySelector('.success-message__text');
-                        if (title) title.textContent = 'Оплата прошла успешно!';
-                        if (text) text.textContent = 'Ваш заказ оплачен. Менеджер свяжется с вами для уточнения деталей доставки.';
+
+                if (result.success) {
+                    if (result.status === 'paid' || result.status === 'succeeded') {
+                        // Оплата прошла успешно - очищаем корзину и показываем успех
+                        cart.clear();
+                        sessionStorage.removeItem('orderId');
+                        sessionStorage.removeItem('pendingOrder');
+                        
+                        if (successModal) {
+                            successModal.classList.add('active');
+                            const title = successModal.querySelector('.success-message__title');
+                            const text = successModal.querySelector('.success-message__text');
+                            if (title) title.textContent = 'Оплата прошла успешно!';
+                            if (text) text.textContent = 'Ваш заказ оплачен. Менеджер свяжется с вами для уточнения деталей доставки.';
+                        }
+                    } else if (result.status === 'pending' || result.status === 'waiting_for_capture') {
+                        // Платёж ещё не завершён - ждём
+                        console.log('Платёж в процессе:', result.status);
+                    } else if (result.status === 'canceled' || result.status === 'failed') {
+                        // Платёж отменён или неудачен
+                        sessionStorage.removeItem('orderId');
+                        sessionStorage.removeItem('pendingOrder');
+                        alert('Оплата не была завершена. Попробуйте оформить заказ снова.');
                     }
-                    sessionStorage.removeItem('orderId');
                 }
             } catch (error) {
                 console.error('Ошибка проверки платежа:', error);

@@ -1,6 +1,7 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const https = require('https');
@@ -14,12 +15,12 @@ const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, '..', 'data.json');
 const HITS_FILE = path.join(__dirname, '..', 'hits.json');
 
-// Настройки ЮKassa (заполните своими данными)
-const YOOKASSA_SHOP_ID = process.env.YOOKASSA_SHOP_ID || 'your_shop_id';
-const YOOKASSA_SECRET_KEY = process.env.YOOKASSA_SECRET_KEY || 'your_secret_key';
+// Настройки ЮKassa
+const YOOKASSA_SHOP_ID = process.env.YOOKASSA_SHOP_ID || '';
+const YOOKASSA_SECRET_KEY = process.env.YOOKASSA_SECRET_KEY || '';
 const YOOKASSA_TEST_MODE = process.env.YOOKASSA_TEST_MODE === 'true';
 
-// URL для уведомлений (замените на свой домен)
+// URL для возврата после оплаты
 const RETURN_URL = process.env.RETURN_URL || 'https://greenmagics.ru/checkout.html';
 
 // Middleware
@@ -211,7 +212,7 @@ app.get('/api/stats', (req, res) => {
 // API: Создание заказа с оплатой ЮKassa
 app.post('/api/create-order', (req, res) => {
   try {
-    const { items, total, name, phone, email, address, comment, payment } = req.body;
+    const { items, total, name, phone, email, address, comment, payment, delivery, subtotal } = req.body;
 
     if (!items || !total || !name || !phone || !email) {
       return res.status(400).json({
@@ -233,6 +234,8 @@ app.post('/api/create-order', (req, res) => {
       address,
       comment,
       payment,
+      delivery,
+      subtotal,
       status: 'pending',
       createdAt: new Date().toISOString()
     };
@@ -256,13 +259,15 @@ app.post('/api/create-order', (req, res) => {
     }
 
     // Создаём платёж ЮKassa
-    createYooKassaPayment(orderId, total, name, email)
+    createYooKassaPayment(orderId, total, name, email, phone, items, delivery)
       .then(paymentData => {
-        if (paymentData.confirmation_url) {
+        // ЮKassa возвращает confirmation.confirmation_url
+        const confirmationUrl = paymentData.confirmation?.confirmation_url;
+        if (confirmationUrl) {
           res.json({
             success: true,
             orderId,
-            confirmationUrl: paymentData.confirmation_url,
+            confirmationUrl: confirmationUrl,
             paymentId: paymentData.id
           });
         } else {
@@ -275,12 +280,9 @@ app.post('/api/create-order', (req, res) => {
       })
       .catch(error => {
         console.error('Ошибка создания платежа:', error);
-        // Возвращаем успех, но без перенаправления (тестовый режим)
-        res.json({
-          success: true,
-          orderId,
-          message: 'Заказ оформлен. В тестовом режиме оплата не требуется.',
-          testMode: true
+        res.status(500).json({
+          success: false,
+          error: 'Ошибка создания платежа: ' + error.message
         });
       });
 
@@ -291,10 +293,10 @@ app.post('/api/create-order', (req, res) => {
 });
 
 // Функция создания платежа ЮKassa
-function createYooKassaPayment(orderId, amount, customerName, customerEmail) {
+function createYooKassaPayment(orderId, amount, customerName, customerEmail, customerPhone, items = [], delivery = 0) {
   return new Promise((resolve, reject) => {
     // Тестовый режим - возвращаем заглушку
-    if (YOOKASSA_TEST_MODE || YOOKASSA_SHOP_ID === 'your_shop_id') {
+    if (YOOKASSA_TEST_MODE || !YOOKASSA_SHOP_ID || YOOKASSA_SHOP_ID === 'your_shop_id') {
       console.log(`[TEST] Платёж для заказа ${orderId} на сумму ${amount}₽`);
       resolve({
         id: `test_${orderId}`,
@@ -304,9 +306,42 @@ function createYooKassaPayment(orderId, amount, customerName, customerEmail) {
       return;
     }
 
+    // Формируем товары для чека
+    const receiptItems = items && items.length > 0 ? items.map(item => ({
+      description: item.name,
+      quantity: Number(item.quantity),
+      amount: {
+        value: Number(item.price).toFixed(2),
+        currency: 'RUB'
+      },
+      vat_code: 1,
+      payment_mode: 'full_payment',
+      payment_subject: 'commodity'
+    })) : [];
+
+    // Добавляем доставку если есть
+    if (delivery && Number(delivery) > 0) {
+      receiptItems.push({
+        description: 'Доставка',
+        quantity: 1,
+        amount: {
+          value: Number(delivery).toFixed(2),
+          currency: 'RUB'
+        },
+        vat_code: 1,
+        payment_mode: 'full_payment',
+        payment_subject: 'service'
+      });
+    }
+
+    // Очищаем phone от нецифровых символов и проверяем длину
+    const cleanPhone = customerPhone ? customerPhone.replace(/\D/g, '') : '';
+    // ЮKassa требует телефон от 10 цифр (например, 79991234567)
+    const validPhone = cleanPhone.length >= 10 ? cleanPhone : null;
+
     const paymentData = {
       amount: {
-        value: amount.toFixed(2),
+        value: Number(amount).toFixed(2),
         currency: 'RUB'
       },
       capture: true,
@@ -316,15 +351,34 @@ function createYooKassaPayment(orderId, amount, customerName, customerEmail) {
       },
       description: `Оплата заказа №${orderId}`,
       metadata: {
-        order_id: orderId.toString()
+        order_id: String(orderId)
       },
       customer: {
-        full_name: customerName,
         email: customerEmail
       }
     };
 
+    // Добавляем phone только если он корректный
+    if (validPhone) {
+      paymentData.customer.phone = validPhone;
+    }
+
+    // Добавляем items только если они есть
+    if (receiptItems.length > 0) {
+      paymentData.receipt = {
+        customer: {
+          email: customerEmail
+        }
+      };
+      // Добавляем phone только если он корректный
+      if (validPhone) {
+        paymentData.receipt.customer.phone = validPhone;
+      }
+      paymentData.receipt.items = receiptItems;
+    }
+
     const postData = JSON.stringify(paymentData);
+    console.log('[YooKassa] Отправка:', postData);
     const options = {
       hostname: 'api.yookassa.ru',
       port: 443,
@@ -341,9 +395,12 @@ function createYooKassaPayment(orderId, amount, customerName, customerEmail) {
       let responseData = '';
       res.on('data', (chunk) => responseData += chunk);
       res.on('end', () => {
+        console.log(`[YooKassa] Status: ${res.statusCode}, Response:`, responseData);
         try {
           const result = JSON.parse(responseData);
+          console.log('[YooKassa]Parsed result:', result);
           if (res.statusCode === 200) {
+            console.log('[YooKassa] confirmation_url:', result.confirmation?.confirmation_url);
             resolve(result);
           } else {
             reject(new Error(result.description || 'Ошибка создания платежа'));
@@ -354,7 +411,10 @@ function createYooKassaPayment(orderId, amount, customerName, customerEmail) {
       });
     });
 
-    req.on('error', reject);
+    req.on('error', (err) => {
+      console.error('[YooKassa] Request error:', err);
+      reject(err);
+    });
     req.write(postData);
     req.end();
   });
